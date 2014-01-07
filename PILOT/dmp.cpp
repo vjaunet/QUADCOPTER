@@ -82,10 +82,10 @@ void DMP::set_com() {
 void DMP::initialize(){
   if (!dmpReady) return;
 
-  float err=0;
-  int n = 1;
   printf("Initializing IMU...\n");
-  do {
+
+  for (int n=1;n<3500;n++) {
+
     // wait for FIFO count > 42 bits
     do {
       fifoCount = mpu.getFIFOCount();
@@ -106,25 +106,11 @@ void DMP::initialize(){
       mpu.dmpGetGravity(&gravity, &q);
       mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
 
-       printf("yaw = %f, pitch = %f, roll = %f\n",
-       	     ypr[YAW]*180/M_PI, ypr[PITCH]*180/M_PI,
-       	     ypr[ROLL]*180/M_PI)
-	;
-      err=0;
-      for (int i=0;i<1;i++) {
-	err += fabs(ypr[i] - lastval[i])*180/M_PI;
-	lastval[i] = ypr[i];
-      }
+       // printf("yaw = %f, pitch = %f, roll = %f\n",
+       // 	     ypr[YAW]*180/M_PI, ypr[PITCH]*180/M_PI,
+       // 	      ypr[ROLL]*180/M_PI);
     }
-
-    //if err==0; you read twice the same value
-    // Go for another round !
-    if (err<1e-4) {
-      err=1;
-      n++;
-    }
-
-  }while (err > 1e-3 || n<10);
+  }
 
   for (int i=0;i<DIM;i++) {
     offset[i] = ypr[i];

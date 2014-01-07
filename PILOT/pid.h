@@ -1,6 +1,10 @@
 #ifndef pid
 #define pid
 
+#include <iostream>
+#include <stdlib.h>
+#include <fstream>
+
 class PID {
 
 private:

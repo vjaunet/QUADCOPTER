@@ -40,7 +40,7 @@ void Socket::create()
   printf( "Succeed to create socket\n\n" );
 }
 
-void Socket::get_target(float& t,float& y,float& p,float& r)
+void Socket::get_target(float &t,float &y,float &p,float &r)
 {
   unsigned char data[256];
   int size = sizeof(data);
@@ -50,14 +50,21 @@ void Socket::get_target(float& t,float& y,float& p,float& r)
     printf("Socket is closed...");
 
   int received_bytes = -1;
-  do
-    {
+  //do{
       sockaddr_in from;
       socklen_t fromLength = sizeof( from );
 
       received_bytes = recvfrom( m_socket, data, size, 0,
 				 (sockaddr*)&from, &fromLength );
-    }while ( received_bytes <= 0 );
+      //}while ( received_bytes <= 0 );
+
+      if (received_bytes < 0) {
+	t=last_t;
+	y=last_y;
+	p=last_p;
+	r=last_r;
+	return;
+      };
 
   //Processing packet
   std::string packet( reinterpret_cast< char const* > (data));
@@ -69,22 +76,31 @@ void Socket::get_target(float& t,float& y,float& p,float& r)
     {
       std::string sub;
       ss >> sub;
+      int cmd;
 
       if (sub == "\"thr\":" ){
 	ss >> sub;
-	std::istringstream( sub ) >> t;
+	std::istringstream( sub ) >> cmd;
+	t = (float) cmd;
+	last_t = t;
       }
       else if(sub == "\"yaw\":"){
 	ss >> sub;
-	std::istringstream( sub ) >> y;
+	std::istringstream( sub ) >> cmd;
+	y = (float) cmd;
+	last_y = y;
       }
       else if(sub == "\"pitch\":"){
 	ss >> sub;
-	std::istringstream( sub ) >> p;
+	std::istringstream( sub ) >> cmd;
+	p = (float) cmd;
+	last_p = p;
       }
       else if(sub == "\"roll\":"){
 	ss >> sub;
-	std::istringstream( sub ) >> r;
+	std::istringstream( sub ) >> cmd;
+	r = (float) cmd;
+	last_r = r;
       }
     } while (ss);
 }

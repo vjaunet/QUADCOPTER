@@ -19,6 +19,7 @@ class Socket{
   sockaddr_in m_address;
   unsigned short m_port;
   int m_socket;
+  float last_t,last_y,last_p,last_r;
 
  public:
   Socket();

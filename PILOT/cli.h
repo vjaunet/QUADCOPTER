@@ -20,7 +20,7 @@ class CLI {
   CLI();
 
   void CLparser(int, char *[]);
-  void getAngleKs(float,float,float);
+  void getKPID(float []);
 };
 
 extern CLI cli;

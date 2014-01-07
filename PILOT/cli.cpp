@@ -23,6 +23,7 @@ CLI::CLI(){
 void CLI::CLparser(int argc, char *argv[]){
   if (argc <=1)
     {
+      printf("PID constants set to 0...");
       return;
     }
 
@@ -65,6 +66,13 @@ void CLI::CLparser(int argc, char *argv[]){
     }//for n=1 to argc
 }
 
-void CLI::getAngleKs(float, float, float){
+void CLI::getKPID(float KPID[6]){
+
+  KPID[0] = m_AngKp;
+  KPID[1] = m_AngKd;
+  KPID[2] = m_AngKi;
+  KPID[3] = m_RateKp;
+  KPID[4] = m_RateKi;
+  KPID[5] = m_RateKd;
 
 }

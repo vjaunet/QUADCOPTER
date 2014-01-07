@@ -40,32 +40,32 @@ TimerClass::TimerClass()
  {
  }
 
- void TimerClass::start()
- {
-   timeValue_.tv_sec = 0;
-   timeValue_.tv_nsec = PERIOD;
-   timeToSet_.it_value = timeValue_;
-   timer_settime(timerId, 0, &timeToSet_, NULL);
-   started = true;
- }
+void TimerClass::start()
+{
+  timeValue_.tv_sec = 0;
+  timeValue_.tv_nsec = PERIOD;
+  timeToSet_.it_value = timeValue_;
+  timer_settime(timerId, 0, &timeToSet_, NULL);
+  started = true;
+}
 
- void TimerClass::stop()
- {
-   timeValue_.tv_sec = 0;
-   timeValue_.tv_nsec = 0;
-   timeToSet_.it_value = timeValue_;
-   timer_settime(timerId, 0, &timeToSet_, NULL);
-   started = false;
- }
+void TimerClass::stop()
+{
+  timeValue_.tv_sec = 0;
+  timeValue_.tv_nsec = 0;
+  timeToSet_.it_value = timeValue_;
+  timer_settime(timerId, 0, &timeToSet_, NULL);
+  started = false;
+}
 
- inline void TimerClass::calcdt_()
- {
-   oldtime_ = time_;
-   clock_gettime(CLOCK_MONOTONIC, &time_);
-   Timer.dt = ((static_cast <int64_t>(time_.tv_sec) * 1000000000 +
-		static_cast <int64_t>(time_.tv_nsec)) -
-	       (static_cast <int64_t>(oldtime_.tv_sec) * 1000000000 +
-		static_cast <int64_t>(oldtime_.tv_nsec))) / 1000000000.0;
+inline void TimerClass::calcdt_()
+{
+  oldtime_ = time_;
+  clock_gettime(CLOCK_MONOTONIC, &time_);
+  Timer.dt = ((static_cast <int64_t>(time_.tv_sec) * 1000000000 +
+	       static_cast <int64_t>(time_.tv_nsec)) -
+	      (static_cast <int64_t>(oldtime_.tv_sec) * 1000000000 +
+	       static_cast <int64_t>(oldtime_.tv_nsec))) / 1000000000.0;
 }
 
 inline void TimerClass::compensate_()
@@ -102,6 +102,8 @@ void TimerClass::sig_handler_(int signum)
 		  pitch.setpoint,
 		  roll.setpoint);
 
+  // printf("%f \n",thr);
+
   // get attitude of the drone
   imu.getAttitude();
 
@@ -113,13 +115,14 @@ void TimerClass::sig_handler_(int signum)
   pitch.update_pid (imu.ypr[PITCH]);
   roll.update_pid  (imu.ypr[ROLL]);
 
-  yawRate.setpoint   = yaw.output;
-  pitchRate.setpoint = pitch.output;
-  rollRate.setpoint  = roll.output;
+  //PID on rotation rate
+  // yawRate.setpoint   = yaw.output;
+  // pitchRate.setpoint = pitch.output;
+  // rollRate.setpoint  = roll.output;
 
-  yawRate.update_pid   (imu.gyro[YAW]);
-  pitchRate.update_pid (imu.gyro[PITCH]);
-  rollRate.update_pid  (imu.gyro[ROLL]);
+  // yawRate.update_pid   (imu.gyro[YAW]);
+  // pitchRate.update_pid (imu.gyro[PITCH]);
+  // rollRate.update_pid  (imu.gyro[ROLL]);
 
   //ESC update
   ESC.servoval[0] =(int)(thr - rollRate.output);//  + pid_out[YAW]);

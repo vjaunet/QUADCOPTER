@@ -1,6 +1,13 @@
-#include <iostream>
-#include <stdlib.h>
-#include <fstream>
+/*
+
+   PID Controller
+
+   author : vincent JAUNET
+   mail : vicnent.jaunet@hotmail.fr
+
+
+*/
+
 #include "pid.h"
 
 
@@ -21,14 +28,16 @@ PID::PID()
   m_sum_err = 0;
   m_ddt_err = 0;
   m_lastInput= 0;
-  m_outmax = 0;
-  m_outmin = 0;
+  m_outmax = 30;
+  m_outmin = -30;
 
 }
 
 void PID::update_pid(float input)
 {
-   m_err = setpoint-input;
+
+  //Computes error
+  m_err = setpoint-input;
 
   //Integrating errors
   //winds up boundaries
@@ -49,13 +58,17 @@ void PID::update_pid(float input)
 
   m_lasterr = m_err;
   m_lastInput= input;
+
+  //printf("setpt %f input %f outpt %f\n", m_Kp, m_Ki, m_Kd);
+  //printf("setpt %f input %f outpt %f\n", setpoint, input, output);
+
 }
 
 void PID::set_Kpid(float Kp,float Ki, float Kd)
 {
-  m_Kd = Kp;
+  m_Kp = Kp;
   m_Ki = Ki;
-  m_Kp = Kd;
+  m_Kd = Kd;
 }
 
 void PID::set_windup_bounds(float Min,float Max)
