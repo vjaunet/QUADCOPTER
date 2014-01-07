@@ -1,7 +1,8 @@
 QUADCOPTER
 ==========
 
-A quadcopter controler on a Raspberry PI
+A quadcopter controller on a Raspberry PI
+------------------------------------------
 
 This project is the development of a code to control a quadcopter
 with a Raspberry Pi.
@@ -21,7 +22,7 @@ The repository has several folders, that I initially made to code and test
 the different functions of the controller. The entire controller is in the 
 PILOT folder.
 
-This proect is greatly inspired from :
+This project is greatly inspired and using source code from :
 - https://github.com/richardghirst/PiBits 
 for ServoBlaster and the MPU6050 usage
 
