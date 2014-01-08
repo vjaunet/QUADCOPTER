@@ -11,8 +11,8 @@
 #include "pid.h"
 
 
-PID yaw, pitch, roll;
-PID yawRate, pitchRate, rollRate;
+PID ypr[3];
+PID yprRate[3];
 
 
 PID::PID()
@@ -30,10 +30,9 @@ PID::PID()
   m_lastInput= 0;
   m_outmax = 30;
   m_outmin = -30;
-
 }
 
-void PID::update_pid(float input)
+float PID::update_pid(float setpoint, float input)
 {
 
   //Computes error
@@ -52,9 +51,9 @@ void PID::update_pid(float input)
 
   //Calculation of the output
   //winds up boundaries
-  output = m_Kp*m_err + m_sum_err + m_ddt_err;
-  if (output > m_outmax) output = m_outmax;
-  if (output < m_outmin) output = m_outmin;
+  m_output = m_Kp*m_err + m_sum_err + m_ddt_err;
+  if (m_output > m_outmax) m_output = m_outmax;
+  if (m_output < m_outmin) m_output = m_outmin;
 
   m_lasterr = m_err;
   m_lastInput= input;
@@ -62,6 +61,7 @@ void PID::update_pid(float input)
   //printf("setpt %f input %f outpt %f\n", m_Kp, m_Ki, m_Kd);
   //printf("setpt %f input %f outpt %f\n", setpoint, input, output);
 
+  return m_output;
 }
 
 void PID::set_Kpid(float Kp,float Ki, float Kd)

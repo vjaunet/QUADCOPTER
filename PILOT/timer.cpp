@@ -96,11 +96,11 @@ void TimerClass::sig_handler_(int signum)
   pthread_mutex_lock(&TimerMutex_);
 
   //1-Get target values from remote
-  float thr=140;
+  float thr, ypr_setpoint[3];
   wifi.get_target(thr,
-		  yaw.setpoint,
-		  pitch.setpoint,
-		  roll.setpoint);
+		  ypr_setpoint[YAW],
+		  ypr_setpoint[PITCH],
+		  ypr_setpoint[ROLL]);
 
   // printf("%f \n",thr);
 
@@ -111,9 +111,10 @@ void TimerClass::sig_handler_(int signum)
   Timer.calcdt_();
 
   // PID on attitude
-  yaw.update_pid   (imu.ypr[YAW]);
-  pitch.update_pid (imu.ypr[PITCH]);
-  roll.update_pid  (imu.ypr[ROLL]);
+  float PIDout[3];
+  for (int i=0;i<DIM;i++){
+    PIDout[i] = ypr[i].update_pid(ypr_setpoint[i],imu.ypr[i]);
+  }
 
   //PID on rotation rate
   // yawRate.setpoint   = yaw.output;
@@ -125,11 +126,13 @@ void TimerClass::sig_handler_(int signum)
   // rollRate.update_pid  (imu.gyro[ROLL]);
 
   //ESC update
-  ESC.servoval[0] =(int)(thr - rollRate.output);//  + pid_out[YAW]);
-  ESC.servoval[1] =(int)(thr + rollRate.output);//  + pid_out[YAW]);
-  ESC.servoval[2] =(int)(thr - pitchRate.output);// - pid_out[YAW]);
-  ESC.servoval[3] =(int)(thr + pitchRate.output);// - pid_out[YAW]);
+  ESC.servoval[0] =(int)(thr - PIDout[ROLL]);//  + pid_out[YAW]);
+  ESC.servoval[1] =(int)(thr + PIDout[ROLL]);//  + pid_out[YAW]);
+  ESC.servoval[2] =(int)(thr - PIDout[PITCH]);// - pid_out[YAW]);
+  ESC.servoval[3] =(int)(thr + PIDout[PITCH]);// - pid_out[YAW]);
   ESC.setServo();
+
+  printf("%d \n",  ESC.servoval[1]);
 
   //timer end
   Timer.compensate_();

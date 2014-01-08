@@ -21,20 +21,18 @@ private:
   float m_lastInput;
   float m_outmax;
   float m_outmin;
+  float m_output;
 
 public:
   PID();
-  void update_pid(float);
+  float update_pid(float setpt, float input);
   void set_Kpid(float, float, float);
   void set_windup_bounds(float, float);
-
   float setpoint;
-  float output;
-
 };
 
 
-extern PID yaw, pitch, roll;
-extern PID yawRate, pitchRate, rollRate;
+extern PID ypr[3];
+extern PID yprRate[3];
 
 #endif

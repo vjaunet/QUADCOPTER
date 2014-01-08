@@ -81,7 +81,7 @@ void Socket::get_target(float &t,float &y,float &p,float &r)
       if (sub == "\"thr\":" ){
 	ss >> sub;
 	std::istringstream( sub ) >> cmd;
-	t = (float) cmd;
+	t = (float) (cmd + 110);
 	last_t = t;
       }
       else if(sub == "\"yaw\":"){

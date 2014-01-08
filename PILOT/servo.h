@@ -1,6 +1,8 @@
 #ifndef SERVOS
 #define SERVOS
 
+#include <stdio.h>
+
 class Servo {
 
 private:

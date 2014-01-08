@@ -30,7 +30,7 @@ void Servo::init(Servo servo)
 
   //initialisation of ESC
   for (int i=0;i<4;i++){
-    servoval[i]=100;
+    servo.servoval[i]=100;
   };
 
   servo.setServo();
@@ -41,9 +41,12 @@ void Servo::init(Servo servo)
 
 void Servo::setServo()
 {
-  int i;
-  if(fid_servo==NULL) return;
-  for (i=0;i<4;i++){
+  if(fid_servo==NULL) {
+    printf("servoblaster not open !!!");
+    exit(0);
+  }
+
+  for (int i=0;i<4;i++){
     fprintf(fid_servo, "%d=%d\n",m_servoId[i], servoval[i]);
     fflush(fid_servo);
   }

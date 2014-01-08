@@ -18,7 +18,7 @@ OPT_Debug= -Wall -g -O2
 # MPU6050_6Axis_MotionApps20.h for details.
 # F = 200/(DDMP_FIFO_RATE + 1)
 
-CXXFLAGS = -DDMP_FIFO_RATE=0
+CXXFLAGS = -DDMP_FIFO_RATE=1
 
 
 ALL:$(EXEC)
