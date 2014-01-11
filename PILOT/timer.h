@@ -17,7 +17,7 @@
 #include "servo.h"
 #include "pid.h"
 #include "dmp.h"
-
+#include "parser.h"
 
 /* #include "MPU6050.h"
    #include "AHRS.h"

@@ -20,7 +20,7 @@ PID::PID()
   //PID constants
   m_Kd = 0;
   m_Ki = 0;
-  m_Kp = 0;
+  m_Kp = 0.01;
 
   //PID variables
   m_err = 0;

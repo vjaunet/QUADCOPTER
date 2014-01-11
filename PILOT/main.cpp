@@ -33,6 +33,7 @@ int main(int argc, char *argv[])
   cli.CLparser(argc, argv);
 
   //set PID constants
+  float kp_,ki_,kd_;
   float KPID[6];
   cli.getKPID(KPID);
 
@@ -40,23 +41,56 @@ int main(int argc, char *argv[])
     ypr[i].set_Kpid(KPID[0],KPID[1],KPID[2]);
   }
 
-
   //initializing Network communication
-  wifi.create();
+  remote.create();
 
-  //intialization of IMU
-  imu.set_com();
-  //imu.initialize();
+  /* Waiting fo Start command */
+  while (true){
 
-  //Initializing ESCs
-  ESC.open_blaster();
-  ESC.init(ESC);
+    switch(remote.get_cmd()){
+    case 10:
+      //set pid constants
+      parser.parse(remote.data,kp_,ki_,kd_);
+      ypr[0].set_Kpid(kp_,ki_,kd_);
+      break;
+    case 11:
+      //set pid constants
+      parser.parse(remote.data,kp_,ki_,kd_);
+      yprRate[0].set_Kpid(kp_,ki_,kd_);
+      break;
+    case 12:
+      //set pid constants
+      parser.parse(remote.data,kp_,ki_,kd_);
+      ypr[1].set_Kpid(kp_,ki_,kd_);
+      ypr[2].set_Kpid(kp_,ki_,kd_);
+      break;
+    case 13:
+      //set pid constants
+      parser.parse(remote.data,kp_,ki_,kd_);
+      yprRate[1].set_Kpid(kp_,ki_,kd_);
+      yprRate[2].set_Kpid(kp_,ki_,kd_);
+      break;
 
-  //things are getting started !
-  Timer.start();
-  for(;;){
-    sleep(1000);
-  }
+
+    case 1:
+      //Remote says "Start"
+
+	//intialization of IMU
+	imu.set_com();
+	//imu.initialize();
+
+	//Initializing ESCs
+	ESC.open_blaster();
+	ESC.init(ESC);
+
+	//things are getting started !
+	Timer.start();
+	for (;;){
+	  sleep(1000);
+	}
+
+      }//end switch
+  }//end
 
   return 0;
 }

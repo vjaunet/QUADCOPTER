@@ -1,13 +1,21 @@
 #include "net.h"
 
-Socket wifi;
+Socket remote;
 
 Socket::Socket()
 {
+  data[0] = '\0';
+  m_lastdata[0] = '\0';
+  m_last_type = -1;
   m_port = 7000;
   m_address.sin_family = AF_INET;
   m_address.sin_addr.s_addr = INADDR_ANY;
   m_address.sin_port = htons( (unsigned short) m_port );
+}
+
+void Socket::set_port(int port){
+  //set the port to desired value
+  m_port = port;
 }
 
 
@@ -40,9 +48,22 @@ void Socket::create()
   printf( "Succeed to create socket\n\n" );
 }
 
-void Socket::get_target(float &t,float &y,float &p,float &r)
-{
-  unsigned char data[256];
+
+int Socket::get_cmd(){
+
+  int type=0;
+
+  //returns 1 for Start(Initialize)
+  //returns 2 for Stop (stops the PID)
+  //returns 3 for Exit (Stops the program)
+
+  //retunrs 10 for yaw PID constants
+  //retunrs 11 for yawrate PID constants
+  //retunrs 12 for PR PID constants
+  //retunrs 13 for PRrate PID constants
+
+  //returns 0 for rcinputs (default)
+
   int size = sizeof(data);
   assert( size > 0 );
 
@@ -50,59 +71,53 @@ void Socket::get_target(float &t,float &y,float &p,float &r)
     printf("Socket is closed...");
 
   int received_bytes = -1;
-  //do{
-      sockaddr_in from;
-      socklen_t fromLength = sizeof( from );
+  sockaddr_in from;
+  socklen_t fromLength = sizeof( from );
 
-      received_bytes = recvfrom( m_socket, data, size, 0,
-				 (sockaddr*)&from, &fromLength );
-      //}while ( received_bytes <= 0 );
+  received_bytes = recvfrom( m_socket, data, size, 0,
+				 (sockaddr*)&from,
+				 &fromLength);
 
-      if (received_bytes < 0) {
-	t=last_t;
-	y=last_y;
-	p=last_p;
-	r=last_r;
-	return;
-      };
+  if (received_bytes <= 0){
+    for (int i=0;i<256;i++){
+      data[i] = m_lastdata[i];
+      type = m_last_type;
+    }}
 
-  //Processing packet
   std::string packet( reinterpret_cast< char const* > (data));
   std::istringstream ss(packet);
-  //printf("%s \n", packet.c_str());
 
-  //Getting target values from packet
-  do
-    {
-      std::string sub;
-      ss >> sub;
-      int cmd;
+  std::string sub;
+  ss >> sub;
 
-      if (sub == "\"thr\":" ){
-	ss >> sub;
-	std::istringstream( sub ) >> cmd;
-	t = (float) (cmd + 110);
-	last_t = t;
-      }
-      else if(sub == "\"yaw\":"){
-	ss >> sub;
-	std::istringstream( sub ) >> cmd;
-	y = (float) cmd;
-	last_y = y;
-      }
-      else if(sub == "\"pitch\":"){
-	ss >> sub;
-	std::istringstream( sub ) >> cmd;
-	p = (float) cmd;
-	last_p = p;
-      }
-      else if(sub == "\"roll\":"){
-	ss >> sub;
-	std::istringstream( sub ) >> cmd;
-	r = (float) cmd;
-	last_r = r;
-      }
-    } while (ss);
+  do{
+    if (sub == "START"){
+      type = 1;
+      break;
+    }else if (sub == "EXIT"){
+      exit(0);
+      break;
+    } else if(sub == "pid"){
+       ss >> sub;
+       if (sub == "yaw_rate"){
+	 type = 10;
+	 break;
+       }else if (sub == "yaw_stab"){
+	 type = 11;
+	 break;
+       }else if (sub == "pr_stab"){
+	 type = 12;
+	 break;
+       }else if (sub == "pr_rate"){
+	 type = 13;
+	 break;
+       }
+    } else { break; }
+  }while(ss);
+
+  m_last_type = type;
+  return(type);
+
 }
 
 

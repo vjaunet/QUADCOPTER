@@ -95,14 +95,38 @@ void TimerClass::sig_handler_(int signum)
 {
   pthread_mutex_lock(&TimerMutex_);
 
-  //1-Get target values from remote
+  //1-Get Command from remote
   float thr, ypr_setpoint[3];
-  wifi.get_target(thr,
-		  ypr_setpoint[YAW],
-		  ypr_setpoint[PITCH],
-		  ypr_setpoint[ROLL]);
+  float kp_,ki_,kd_;
+  switch (remote.get_cmd()){
 
-  // printf("%f \n",thr);
+  case 0:
+    //set rcinput values values
+    parser.parse(remote.data,thr,ypr_setpoint);
+    break;
+  case 10:
+    //set pid constants
+    parser.parse(remote.data,kp_,ki_,kd_);
+    ypr[0].set_Kpid(kp_,ki_,kd_);
+    break;
+  case 11:
+    //set pid constants
+    parser.parse(remote.data,kp_,ki_,kd_);
+    yprRate[0].set_Kpid(kp_,ki_,kd_);
+    break;
+  case 12:
+    //set pid constants
+    parser.parse(remote.data,kp_,ki_,kd_);
+    ypr[1].set_Kpid(kp_,ki_,kd_);
+    ypr[2].set_Kpid(kp_,ki_,kd_);
+    break;
+  case 13:
+    //set pid constants
+    parser.parse(remote.data,kp_,ki_,kd_);
+    yprRate[1].set_Kpid(kp_,ki_,kd_);
+    yprRate[2].set_Kpid(kp_,ki_,kd_);
+    break;
+  }
 
   // get attitude of the drone
   imu.getAttitude();
@@ -132,7 +156,7 @@ void TimerClass::sig_handler_(int signum)
   ESC.servoval[3] =(int)(thr + PIDout[PITCH]);// - pid_out[YAW]);
   ESC.setServo();
 
-  printf("%d \n",  ESC.servoval[1]);
+  printf("%d %d\n",  ESC.servoval[1], ESC.servoval[0]);
 
   //timer end
   Timer.compensate_();
