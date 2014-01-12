@@ -3,6 +3,15 @@
  * Author: matt
  *
  * Created on 05 November 2012, 10:19
+ * Modified 01-2014, vincent jaunet
+ *
+ * The timer class realize an action on a specific
+ * clock signal. The clock oscillates at period PERIOD.
+ * it uses a timer
+ *
+ * The action to be realized is specified in the function
+ * sig_handler.
+ *
  */
 
 #include "timer.h"
@@ -133,11 +142,12 @@ void TimerClass::sig_handler_(int signum)
 
   //Timer dt
   Timer.calcdt_();
+  printf("%f \n",Timer.dt);
 
   // PID on attitude
   float PIDout[3];
   for (int i=0;i<DIM;i++){
-    PIDout[i] = ypr[i].update_pid(ypr_setpoint[i],imu.ypr[i]);
+    PIDout[i] = ypr[i].update_pid(ypr_setpoint[i],imu.ypr[i],Timer.dt);
   }
 
   //PID on rotation rate
@@ -155,8 +165,6 @@ void TimerClass::sig_handler_(int signum)
   ESC.servoval[2] =(int)(thr - PIDout[PITCH]);// - pid_out[YAW]);
   ESC.servoval[3] =(int)(thr + PIDout[PITCH]);// - pid_out[YAW]);
   ESC.setServo();
-
-  printf("%d %d\n",  ESC.servoval[1], ESC.servoval[0]);
 
   //timer end
   Timer.compensate_();

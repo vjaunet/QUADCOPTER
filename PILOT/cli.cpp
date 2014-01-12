@@ -23,7 +23,7 @@ CLI::CLI(){
 void CLI::CLparser(int argc, char *argv[]){
   if (argc <=1)
     {
-      printf("PID constants set to 0...");
+      printf("PID constants set to defaults ...\n");
       return;
     }
 

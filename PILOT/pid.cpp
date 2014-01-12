@@ -32,28 +32,31 @@ PID::PID()
   m_outmin = -30;
 }
 
-float PID::update_pid(float setpoint, float input)
+float PID::update_pid(float setpoint, float input, float dt)
 {
 
   //Computes error
   m_err = setpoint-input;
 
   //Integrating errors
-  //winds up boundaries
-  m_sum_err += m_err*m_Ki;
-  if (m_sum_err > m_outmax) m_sum_err = m_outmax;
-  if (m_sum_err < m_outmin) m_sum_err = m_outmin;
-
+  m_sum_err += m_err * m_Ki * dt;
 
   //calculating error derivative
   //Input derivative is used to avoid derivative kick
-  m_ddt_err = -m_Kd*(input - m_lastInput);
+  m_ddt_err = -m_Kd / dt * (input - m_lastInput);
 
   //Calculation of the output
   //winds up boundaries
   m_output = m_Kp*m_err + m_sum_err + m_ddt_err;
-  if (m_output > m_outmax) m_output = m_outmax;
-  if (m_output < m_outmin) m_output = m_outmin;
+  if (m_output > m_outmax) {
+    //winds up boundaries
+    m_sum_err -= m_output - m_outmax;
+    m_output = m_outmax;
+  }else if (m_output < m_outmin) {
+    //winds up boundaries
+    m_sum_err += m_outmin - m_output;
+    m_output = m_outmin;
+  }
 
   m_lasterr = m_err;
   m_lastInput= input;

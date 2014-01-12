@@ -3,6 +3,7 @@
  * Author: matt
  *
  * Created on 05 November 2012, 10:19
+ * Modified 01-2014, vincent jaunet
  */
 
 #ifndef TIMER_H
@@ -42,8 +43,8 @@ class TimerClass
 
  private:
   static void sig_handler_(int signum);
-  struct itimerspec timeToSet_; //time to be set
-  struct timespec timeValue_; //timer expiration value
+  struct itimerspec timeToSet_;  //time to be set
+  struct timespec timeValue_;    //timer expiration value
   struct timespec timeInterval_; //timer period
   timespec oldtime_;
   timespec time_;

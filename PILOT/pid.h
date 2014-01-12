@@ -25,7 +25,7 @@ private:
 
 public:
   PID();
-  float update_pid(float setpt, float input);
+  float update_pid(float setpt, float input, float dt);
   void set_Kpid(float, float, float);
   void set_windup_bounds(float, float);
   float setpoint;
