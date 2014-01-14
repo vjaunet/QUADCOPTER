@@ -33,3 +33,42 @@ for the Timing and the code structure
 for the Android app
 
 Many thanks to these people.
+
+
+Hardware
+--------
+
+This projects includes :  
+- 4 brushless motors (TURNIGY 2204-14T 19g Outrunner)
+- 4 Electronic Speed Controllers (Turnigy Multistar 10 Amp)
+- 1 LiPo 3s 3700 mAh battery
+- 1 sparkfun MPU6050 breakout board
+- 1 QuadCopter frame
+- 1 Android device for remote
+
+Wiring
+------
+
+MPU6050 :
+VDD -> 3.3V
+GND -> GND
+SDA -> SDA
+SCL -> SCL
+VIO -> 3.3V 
+
+
+ESCs:
+GND -> GND
+Signal Servo 0 -> pin 4
+Signal Servo 1 -> pin 23
+Signal Servo 2 -> pin 24
+Signal Servo 3 -> pin 25
+
+Note that the use of this code requires some modofication of the Servoblaster configuration.
+
+
+
+
+
+
+
