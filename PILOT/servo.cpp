@@ -1,6 +1,26 @@
-#include <iostream>
-#include <stdlib.h>
-#include <fstream>
+/*
+
+   Servo Class
+
+   author : vincent JAUNET
+   mail : vincent.jaunet@hotmail.fr
+   date : 10-01-2013
+
+   Description:
+   the Servo class is a collection of routine used to control
+   the motors through the electronic speed controllers.
+   ESC and Servo use the same communication protocole: PWM. That is
+   the reason why the servoblaster module is being used here. This allows
+   to get rid of an external PIC controller to generate such PWM signal.
+
+   The routines in the Serco class do the follwing:
+   - open the /dev/servoblaster file in order to write in it
+   - initlaize the ESC by sending a PWM of 1ms (~ throttle = 0)
+   - write the desired PWM values
+
+*/
+
+
 #include "servo.h"
 
 Servo ESC;

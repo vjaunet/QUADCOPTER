@@ -1,3 +1,20 @@
+/*
+
+  DMP class
+  author : vincent jaunet
+  date : 10-01-2013
+
+  Description :
+  The DMP class is mainly a wrapper to the MPU6050
+  one from github/PiBits and Jeff Rowberg <jeff@rowberg.net>
+
+  It defines the main functions to :
+  -set up the I2C communication through I2Cdev
+  -Initialize the measurements and retrieve Offset values
+  -Get the attitude of the drone
+
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -80,6 +97,10 @@ void DMP::set_com() {
 }
 
 void DMP::initialize(){
+
+  //This routine waits for the yaw angle to stop
+  //drifting
+
   if (!dmpReady) return;
 
   printf("Initializing IMU...\n");

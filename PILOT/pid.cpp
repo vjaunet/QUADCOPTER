@@ -3,8 +3,16 @@
    PID Controller
 
    author : vincent JAUNET
-   mail : vicnent.jaunet@hotmail.fr
+   mail : vincent.jaunet@hotmail.fr
+   date : 10-01-2013
 
+   Description:
+   the PID class is a collection of routine necessary
+   to perform a PID control based on setpoints (remote control),
+   inputs (measured attitude).
+   Can be used for any type of system and features :
+   - Derivative on measurement
+   - Windsup of integral errors
 
 */
 

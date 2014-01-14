@@ -1,3 +1,19 @@
+/*
+
+  Socekt class
+  author : vincent jaunet
+  date : 10-01-2013
+
+  Description :
+  The Socket class contains all the necessary routine to set
+  up and use a UDP network serve on the drone waiting for
+  the remote client to send request.
+  The output should be parsed in order to retrieve
+  the desired attitude from the remote (see parse.*)
+
+*/
+
+
 #include "net.h"
 
 Socket remote;

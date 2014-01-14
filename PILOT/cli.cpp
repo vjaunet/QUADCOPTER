@@ -1,8 +1,12 @@
-#include <string.h>
-#include <string>
-#include <stdio.h>
-#include <stdlib.h>
 
+/*
+ *          cli.cpp
+ *      created 01-2014
+ *   author : Vincent Jaunet
+ *
+ * Makes possible to give PID constant values
+ * through command line options
+ */
 #include "cli.h"
 
 CLI cli;

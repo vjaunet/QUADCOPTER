@@ -1,6 +1,9 @@
 #ifndef SERVOS
 #define SERVOS
 
+#include <iostream>
+#include <fstream>
+#include <stdlib.h>
 #include <stdio.h>
 
 class Servo {

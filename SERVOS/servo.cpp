@@ -34,7 +34,7 @@ void Servo::init(Servo servo)
 
   servo.set(servoval);
 
-  sleep(5);
+  sleep(2);
 }
 
 void Servo::set(int* ServoPosition)

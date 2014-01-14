@@ -142,7 +142,6 @@ void TimerClass::sig_handler_(int signum)
 
   //Timer dt
   Timer.calcdt_();
-  printf("%f \n",Timer.dt);
 
   // PID on attitude
   float PIDout[3];

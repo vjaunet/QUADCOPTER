@@ -3,6 +3,9 @@
 
 #include <string.h>
 #include <string>
+#include <stdio.h>
+#include <stdlib.h>
+
 
 class CLI {
 
