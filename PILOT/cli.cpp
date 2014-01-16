@@ -24,11 +24,11 @@ CLI::CLI(){
 }
 
 
-void CLI::CLparser(int argc, char *argv[]){
+bool CLI::CLparser(int argc, char *argv[]){
   if (argc <=1)
     {
       printf("PID constants set to defaults ...\n");
-      return;
+      return false;
     }
 
   for (int n=1;n<argc;n+=2){
@@ -67,7 +67,10 @@ void CLI::CLparser(int argc, char *argv[]){
       exit(1);
     }
 
-    }//for n=1 to argc
+  }//for n=1 to argc
+
+  return true;
+
 }
 
 void CLI::getKPID(float KPID[6]){

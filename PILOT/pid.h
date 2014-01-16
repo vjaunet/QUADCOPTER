@@ -32,7 +32,7 @@ public:
 };
 
 
-extern PID ypr[3];
-extern PID yprRate[3];
+extern PID yprSTAB[3];
+extern PID yprRATE[3];
 
 #endif

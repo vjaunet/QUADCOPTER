@@ -171,8 +171,8 @@ void DMP::getAttitude()
     for (int i=0;i<DIM;i++) ypr[i]-=offset[i];
 
     mpu.dmpGetGyro(g, fifoBuffer);
-    gyro[YAW]   = (float)(g[2]/113);
-    gyro[PITCH] = (float)(g[1]/113);
-    gyro[ROLL]  = (float)(g[0]/113);
+    gyro[YAW]   = (float)(g[2])/131.0f;
+    gyro[PITCH] = (float)(g[1])/131.0f;
+    gyro[ROLL]  = (float)(g[0])/131.0f;
   }
 }

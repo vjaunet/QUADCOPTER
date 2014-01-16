@@ -19,8 +19,8 @@
 #include "pid.h"
 
 
-PID ypr[3];
-PID yprRate[3];
+PID yprSTAB[3];
+PID yprRATE[3];
 
 
 PID::PID()
@@ -36,8 +36,8 @@ PID::PID()
   m_sum_err = 0;
   m_ddt_err = 0;
   m_lastInput= 0;
-  m_outmax = 30;
-  m_outmin = -30;
+  m_outmax = 20;
+  m_outmin = -20;
 }
 
 float PID::update_pid(float setpoint, float input, float dt)

@@ -112,30 +112,33 @@ void TimerClass::sig_handler_(int signum)
   case 0:
     //set rcinput values values
     parser.parse(remote.data,thr,ypr_setpoint);
+    printf("Got it! %f %f\n",thr,ypr_setpoint[1]);
     break;
   case 10:
     //set pid constants
     parser.parse(remote.data,kp_,ki_,kd_);
-    ypr[0].set_Kpid(kp_,ki_,kd_);
+    yprSTAB[0].set_Kpid(kp_,ki_,kd_);
     break;
   case 11:
     //set pid constants
     parser.parse(remote.data,kp_,ki_,kd_);
-    yprRate[0].set_Kpid(kp_,ki_,kd_);
+    yprRATE[0].set_Kpid(kp_,ki_,kd_);
     break;
   case 12:
     //set pid constants
     parser.parse(remote.data,kp_,ki_,kd_);
-    ypr[1].set_Kpid(kp_,ki_,kd_);
-    ypr[2].set_Kpid(kp_,ki_,kd_);
+    yprSTAB[1].set_Kpid(kp_,ki_,kd_);
+    yprSTAB[2].set_Kpid(kp_,ki_,kd_);
     break;
   case 13:
     //set pid constants
     parser.parse(remote.data,kp_,ki_,kd_);
-    yprRate[1].set_Kpid(kp_,ki_,kd_);
-    yprRate[2].set_Kpid(kp_,ki_,kd_);
+    yprRATE[1].set_Kpid(kp_,ki_,kd_);
+    yprRATE[2].set_Kpid(kp_,ki_,kd_);
     break;
   }
+
+  //thr = 115;
 
   // get attitude of the drone
   imu.getAttitude();
@@ -143,26 +146,24 @@ void TimerClass::sig_handler_(int signum)
   //Timer dt
   Timer.calcdt_();
 
-  // PID on attitude
   float PIDout[3];
-  for (int i=0;i<DIM;i++){
-    PIDout[i] = ypr[i].update_pid(ypr_setpoint[i],imu.ypr[i],Timer.dt);
-  }
+  // PID on attitude
+  //  for (int i=0;i<DIM;i++){
+  //  PIDout[i] = yprSTAB[i].update_pid(ypr_setpoint[i],imu.ypr[i],Timer.dt);
+  //}
+
 
   //PID on rotation rate
-  // yawRate.setpoint   = yaw.output;
-  // pitchRate.setpoint = pitch.output;
-  // rollRate.setpoint  = roll.output;
+  for (int i=0;i<DIM;i++){
+    PIDout[i] = yprRATE[i].update_pid(ypr_setpoint[i],imu.gyro[i],Timer.dt);
+  }
 
-  // yawRate.update_pid   (imu.gyro[YAW]);
-  // pitchRate.update_pid (imu.gyro[PITCH]);
-  // rollRate.update_pid  (imu.gyro[ROLL]);
 
   //ESC update
-  ESC.servoval[0] =(int)(thr - PIDout[ROLL]);//  + pid_out[YAW]);
-  ESC.servoval[1] =(int)(thr + PIDout[ROLL]);//  + pid_out[YAW]);
-  ESC.servoval[2] =(int)(thr - PIDout[PITCH]);// - pid_out[YAW]);
-  ESC.servoval[3] =(int)(thr + PIDout[PITCH]);// - pid_out[YAW]);
+  ESC.servoval[0] =(int)(thr - PIDout[PITCH]);//  + pid_out[YAW]);
+  ESC.servoval[1] =(int)(thr + PIDout[PITCH]);//  + pid_out[YAW]);
+  ESC.servoval[2] =(int)(thr + PIDout[ROLL]);// - pid_out[YAW]);
+  ESC.servoval[3] =(int)(thr - PIDout[ROLL]);// - pid_out[YAW]);
   ESC.setServo();
 
   //timer end

@@ -22,7 +22,7 @@ class CLI {
  public:
   CLI();
 
-  void CLparser(int, char *[]);
+  bool CLparser(int, char *[]);
   void getKPID(float []);
 };
 

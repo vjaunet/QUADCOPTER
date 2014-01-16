@@ -70,9 +70,6 @@ int Socket::get_cmd(){
   int type=0;
 
   //returns 1 for Start(Initialize)
-  //returns 2 for Stop (stops the PID)
-  //returns 3 for Exit (Stops the program)
-
   //retunrs 10 for yaw PID constants
   //retunrs 11 for yawrate PID constants
   //retunrs 12 for PR PID constants

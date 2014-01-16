@@ -29,16 +29,15 @@ int main(int argc, char *argv[])
   printf("----------------------\n");
   printf("\n");
 
-  //command line options
-  cli.CLparser(argc, argv);
-
-  //set PID constants
+  //set PID constants from command line options
   float kp_,ki_,kd_;
   float KPID[6];
-  cli.getKPID(KPID);
-
-  for (int i=0;i<DIM;i++){
-    ypr[i].set_Kpid(KPID[0],KPID[1],KPID[2]);
+  if (cli.CLparser(argc, argv)){
+    cli.getKPID(KPID);
+    for (int i=0;i<DIM;i++){
+      yprSTAB[i].set_Kpid(KPID[0],KPID[1],KPID[2]);
+      yprRATE[i].set_Kpid(KPID[3],KPID[4],KPID[5]);
+    }
   }
 
   //initializing Network communication
@@ -48,27 +47,33 @@ int main(int argc, char *argv[])
   while (true){
 
     switch(remote.get_cmd()){
+      //returns 1 for Start(Initialize)
+      //returns 10 for yawstab PID constants
+      //returns 11 for yawrate PID constants
+      //returns 12 for PRstab PID constants
+      //returns 13 for PRrate PID constants
+
     case 10:
       //set pid constants
       parser.parse(remote.data,kp_,ki_,kd_);
-      ypr[0].set_Kpid(kp_,ki_,kd_);
+      yprSTAB[0].set_Kpid(kp_,ki_,kd_);
       break;
     case 11:
       //set pid constants
       parser.parse(remote.data,kp_,ki_,kd_);
-      yprRate[0].set_Kpid(kp_,ki_,kd_);
+      yprRATE[0].set_Kpid(kp_,ki_,kd_);
       break;
     case 12:
       //set pid constants
       parser.parse(remote.data,kp_,ki_,kd_);
-      ypr[1].set_Kpid(kp_,ki_,kd_);
-      ypr[2].set_Kpid(kp_,ki_,kd_);
+      yprSTAB[1].set_Kpid(kp_,ki_,kd_);
+      yprSTAB[2].set_Kpid(kp_,ki_,kd_);
       break;
     case 13:
       //set pid constants
       parser.parse(remote.data,kp_,ki_,kd_);
-      yprRate[1].set_Kpid(kp_,ki_,kd_);
-      yprRate[2].set_Kpid(kp_,ki_,kd_);
+      yprRATE[1].set_Kpid(kp_,ki_,kd_);
+      yprRATE[2].set_Kpid(kp_,ki_,kd_);
       break;
 
 
