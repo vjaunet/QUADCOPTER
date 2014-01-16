@@ -24,8 +24,11 @@ class Socket{
 
  public:
   Socket();
+  ~Socket();
+
   void set_port(int port);
   void create();
+  void Close();
   int get_cmd(float& ,float& ,float& ,float&);
   int get_cmd();
   unsigned char data[256];

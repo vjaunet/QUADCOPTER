@@ -29,6 +29,13 @@ Socket::Socket()
   m_address.sin_port = htons( (unsigned short) m_port );
 }
 
+
+Socket::~Socket()
+{
+  Close();
+}
+
+
 void Socket::set_port(int port){
   //set the port to desired value
   m_port = port;
@@ -65,11 +72,21 @@ void Socket::create()
 }
 
 
+void Socket::Close(){
+
+  if ( m_socket != 0 )
+    {
+      close( m_socket );
+      m_socket = 0;
+    }
+}
+
 int Socket::get_cmd(){
 
   int type=0;
 
   //returns 1 for Start(Initialize)
+  //returns 666 for Exit
   //retunrs 10 for yaw PID constants
   //retunrs 11 for yawrate PID constants
   //retunrs 12 for PR PID constants
@@ -108,7 +125,7 @@ int Socket::get_cmd(){
       type = 1;
       break;
     }else if (sub == "EXIT"){
-      exit(0);
+      type = 666;
       break;
     } else if(sub == "pid"){
        ss >> sub;

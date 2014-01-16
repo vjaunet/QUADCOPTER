@@ -109,10 +109,19 @@ void TimerClass::sig_handler_(int signum)
   float kp_,ki_,kd_;
   switch (remote.get_cmd()){
 
+  case 666:
+    //On exit
+    //stop servos
+    for (int i=0;i<4;i++){ESC.servoval[i] = 0;}
+    ESC.setServo();
+
+    //close socket
+    remote.Close();
+
+    exit(0);
   case 0:
     //set rcinput values values
     parser.parse(remote.data,thr,ypr_setpoint);
-    printf("Got it! %f %f\n",thr,ypr_setpoint[1]);
     break;
   case 10:
     //set pid constants
@@ -138,8 +147,6 @@ void TimerClass::sig_handler_(int signum)
     break;
   }
 
-  //thr = 115;
-
   // get attitude of the drone
   imu.getAttitude();
 
@@ -152,6 +159,8 @@ void TimerClass::sig_handler_(int signum)
   //  PIDout[i] = yprSTAB[i].update_pid(ypr_setpoint[i],imu.ypr[i],Timer.dt);
   //}
 
+
+  printf("%f %f\n", ypr_setpoint[3],imu.gyro[3]);
 
   //PID on rotation rate
   for (int i=0;i<DIM;i++){
