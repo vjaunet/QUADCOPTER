@@ -1,8 +1,9 @@
 /*
-
+  ---------------------------
   DMP class
   author : vincent jaunet
   date : 10-01-2013
+  ---------------------------
 
   Description :
   The DMP class is mainly a wrapper to the MPU6050
@@ -12,6 +13,26 @@
   -set up the I2C communication through I2Cdev
   -Initialize the measurements and retrieve Offset values
   -Get the attitude of the drone
+
+  Copyright (c) <2014> <Vincent Jaunet>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  THE SOFTWARE.
 
 */
 
@@ -49,7 +70,7 @@ DMP::DMP()
   PITCH = 1;
   ROLL = 2;
   DIM = 3;
-
+  initialized = false;
   for (int i=0;i<DIM;i++) lastval[i]=10;
 }
 
@@ -137,9 +158,10 @@ void DMP::initialize(){
     offset[i] = ypr[i];
   }
   printf("IMU init done; offset values are :\n");
-  printf("yaw = %f, pitch = %f, roll = %f\n",
+  printf("yaw = %f, pitch = %f, roll = %f\n\n",
 	 offset[YAW]*180/M_PI, offset[PITCH]*180/M_PI,
 	 offset[ROLL]*180/M_PI);
+  initialized = true;
 }
 
 
@@ -148,9 +170,9 @@ void DMP::getAttitude()
   if (!dmpReady) return;
 
   // wait for FIFO count > 42 bits
-    do {
-      fifoCount = mpu.getFIFOCount();
-    }while (fifoCount<42);
+  do {
+  fifoCount = mpu.getFIFOCount();
+  }while (fifoCount<42);
 
   if (fifoCount == 1024) {
     // reset so we can continue cleanly
@@ -168,11 +190,14 @@ void DMP::getAttitude()
     mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
 
     //removing offset values
-    for (int i=0;i<DIM;i++) ypr[i]-=offset[i];
+    for (int i=0;i<DIM;i++){
+      ypr[i]-=offset[i];
+      ypr[i]*=180/M_PI;
+    }
 
     mpu.dmpGetGyro(g, fifoBuffer);
-    gyro[YAW]   = (float)(g[2])/131.0f;
-    gyro[PITCH] = (float)(g[1])/131.0f;
-    gyro[ROLL]  = (float)(g[0])/131.0f;
+    for (int i=0;i<DIM;i++){
+      gyro[i]   = (float)(g[i])/131.0;
+   }
   }
 }

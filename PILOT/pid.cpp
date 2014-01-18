@@ -40,7 +40,7 @@ PID::PID()
   m_outmin = -20;
 }
 
-float PID::update_pid(float setpoint, float input, float dt)
+int PID::update_pid(float setpoint, float input, float dt)
 {
 
   //Computes error
@@ -72,7 +72,7 @@ float PID::update_pid(float setpoint, float input, float dt)
   //printf("setpt %f input %f outpt %f\n", m_Kp, m_Ki, m_Kd);
   //printf("setpt %f input %f outpt %f\n", setpoint, input, output);
 
-  return m_output;
+  return (int)m_output;
 }
 
 void PID::set_Kpid(float Kp,float Ki, float Kd)

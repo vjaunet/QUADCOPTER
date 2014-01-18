@@ -31,7 +31,6 @@ Servo::Servo()
   m_servoId[1] = 1;
   m_servoId[2] = 2;
   m_servoId[3] = 3;
-
 }
 
 void Servo::open_blaster()
@@ -50,7 +49,7 @@ void Servo::init(Servo servo)
 
   //initialisation of ESC
   for (int i=0;i<4;i++){
-    servo.servoval[i]=100;
+    servo.servoval[i]=SERVO_MIN;
   };
 
   servo.setServo();
@@ -67,7 +66,7 @@ void Servo::setServo()
   }
 
   for (int i=0;i<4;i++){
-    fprintf(fid_servo, "%d=%d\n",m_servoId[i], servoval[i]);
+    fprintf(fid_servo, "%d=%dus\n",m_servoId[i], servoval[i]);
     fflush(fid_servo);
   }
 }

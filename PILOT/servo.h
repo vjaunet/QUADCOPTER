@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define SERVO_MIN 1000;
+
 class Servo {
 
 private:

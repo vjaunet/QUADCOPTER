@@ -153,20 +153,18 @@ void TimerClass::sig_handler_(int signum)
   //Timer dt
   Timer.calcdt_();
 
-  float PIDout[3];
+  int PIDout[3];
   // PID on attitude
-  //  for (int i=0;i<DIM;i++){
-  //  PIDout[i] = yprSTAB[i].update_pid(ypr_setpoint[i],imu.ypr[i],Timer.dt);
-  //}
-
-
-  printf("%f %f\n", ypr_setpoint[3],imu.gyro[3]);
-
-  //PID on rotation rate
   for (int i=0;i<DIM;i++){
-    PIDout[i] = yprRATE[i].update_pid(ypr_setpoint[i],imu.gyro[i],Timer.dt);
+    PIDout[i] = yprSTAB[i].update_pid(ypr_setpoint[i],imu.ypr[i],Timer.dt);
   }
 
+  //PID on rotation rate
+  // for (int i=0;i<DIM;i++){
+  //   PIDout[i] = yprRATE[i].update_pid(ypr_setpoint[i],imu.gyro[i],Timer.dt);
+  // }
+
+  //printf("%d \n",PIDout[2]);
 
   //ESC update
   ESC.servoval[0] =(int)(thr - PIDout[PITCH]);//  + pid_out[YAW]);

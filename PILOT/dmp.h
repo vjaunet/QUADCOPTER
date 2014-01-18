@@ -18,6 +18,7 @@ class DMP {
   void getAttitude();
   void set_com();
   void initialize();
+  bool initialized;
 
   float ypr[3];
   float gyro[3];

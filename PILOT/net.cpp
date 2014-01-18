@@ -85,7 +85,8 @@ int Socket::get_cmd(){
 
   int type=0;
 
-  //returns 1 for Start(Initialize)
+  //returns 1 for Start
+  //returns 2 for Initialize
   //returns 666 for Exit
   //retunrs 10 for yaw PID constants
   //retunrs 11 for yawrate PID constants
@@ -126,6 +127,9 @@ int Socket::get_cmd(){
       break;
     }else if (sub == "EXIT"){
       type = 666;
+      break;
+    }else if (sub == "INIT"){
+      type = 2;
       break;
     } else if(sub == "pid"){
        ss >> sub;
