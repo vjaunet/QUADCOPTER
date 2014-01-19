@@ -13,6 +13,13 @@
 #include <fstream>
 #include <sstream>
 
+#include "net.h"
+#include "servo.h"
+#include "pid.h"
+#include "dmp.h"
+#include "timer.h"
+
+
 class Socket{
 
  private:
@@ -21,6 +28,9 @@ class Socket{
   int m_socket;
   unsigned char m_lastdata[256];
   int m_last_type;
+  int get_cmd(float& ,float& ,float& ,float&);
+  int get_cmd();
+
 
  public:
   Socket();
@@ -29,8 +39,7 @@ class Socket{
   void set_port(int port);
   void create();
   void Close();
-  int get_cmd(float& ,float& ,float& ,float&);
-  int get_cmd();
+  void exec_remoteCMD();
   unsigned char data[256];
 
 };

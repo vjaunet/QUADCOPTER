@@ -42,20 +42,29 @@ void Servo::open_blaster()
   }
 }
 
-void Servo::init(Servo servo)
+void Servo::init()
 {
   printf("Initialization of ESC...\n");
   if(fid_servo==NULL) return;
 
   //initialisation of ESC
   for (int i=0;i<4;i++){
-    servo.servoval[i]=SERVO_MIN;
+    servoval[i]=SERVO_MIN;
   };
 
-  servo.setServo();
+  setServo();
   sleep(1);
 
   printf("                     ... DONE.\n");
+}
+
+void Servo::update(float throttle, float PIDcorrections[DIM])
+{
+  servoval[0] =(int)(throttle - PIDcorrections[PITCH]);
+  servoval[1] =(int)(throttle + PIDcorrections[PITCH]);
+  servoval[2] =(int)(throttle + PIDcorrections[ROLL]);
+  servoval[3] =(int)(throttle -PIDcorrections[ROLL]);
+  setServo();
 }
 
 void Servo::setServo()

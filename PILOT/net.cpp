@@ -154,5 +154,87 @@ int Socket::get_cmd(){
 
 }
 
+void Socket::exec_remoteCMD()
+{
+  //PID variables
+  float thr, ypr_setpoint[3];
+  float kp_,ki_,kd_;
+
+
+  switch(get_cmd()){
+      //returns 1 for Start(Initialize)
+      //returns 2 for Initialize
+      //returns 10 for yawstab PID constants
+      //returns 11 for yawrate PID constants
+      //returns 12 for PRstab PID constants
+      //returns 13 for PRrate PID constants
+
+  case 666:
+    //On exit
+    //stop servos
+    for (int i=0;i<4;i++) ESC.servoval[i] = 0;
+    ESC.setServo();
+
+    //close socket
+    remote.Close();
+
+    exit(0);
+  case 0:
+    //set rcinput values values
+    parser.parse(remote.data,thr,ypr_setpoint);
+    break;
+
+    case 10:
+      //set pid constants
+      parser.parse(remote.data,kp_,ki_,kd_);
+      yprSTAB[0].set_Kpid(kp_,ki_,kd_);
+      break;
+    case 11:
+      //set pid constants
+      parser.parse(remote.data,kp_,ki_,kd_);
+      yprRATE[0].set_Kpid(kp_,ki_,kd_);
+      break;
+    case 12:
+      //set pid constants
+      parser.parse(remote.data,kp_,ki_,kd_);
+      yprSTAB[1].set_Kpid(kp_,ki_,kd_);
+      yprSTAB[2].set_Kpid(kp_,ki_,kd_);
+      break;
+    case 13:
+      //set pid constants
+      parser.parse(remote.data,kp_,ki_,kd_);
+      yprRATE[1].set_Kpid(kp_,ki_,kd_);
+      yprRATE[2].set_Kpid(kp_,ki_,kd_);
+      break;
+
+    case 2:
+      //intialization of IMU
+      imu.set_com();
+      imu.initialize();
+      break;
+
+    case 1:
+      //Remote says "Start"
+      if (!imu.initialized){
+	printf("DMP not Initalized\n Can't start...\n");
+	break;
+      }
+
+      //Initializing ESCs
+      ESC.open_blaster();
+      ESC.init();
+
+      //things are getting started !
+      Timer.start();
+      for (;;){
+	sleep(1000);
+      }
+
+    }//end switch
+
+  return;
+}
+
+
 
 

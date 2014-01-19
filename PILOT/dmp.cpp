@@ -66,10 +66,6 @@ DMP imu;
 DMP::DMP()
 {
   dmpReady=true;
-  YAW = 0;
-  PITCH = 1;
-  ROLL = 2;
-  DIM = 3;
   initialized = false;
   for (int i=0;i<DIM;i++) lastval[i]=10;
 }

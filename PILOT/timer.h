@@ -18,13 +18,6 @@
 #include "servo.h"
 #include "pid.h"
 #include "dmp.h"
-#include "parser.h"
-
-/* #include "MPU6050.h"
-   #include "AHRS.h"
-   #include "Logger.h"
-   #include "PICInterface.h"
-   #include "Control.h" */
 
 class TimerClass
 {
@@ -46,12 +39,18 @@ class TimerClass
   struct itimerspec timeToSet_;  //time to be set
   struct timespec timeValue_;    //timer expiration value
   struct timespec timeInterval_; //timer period
+
   timespec oldtime_;
   timespec time_;
   timespec iterationtime_;
 
   void calcdt_();
   void compensate_();
+
+  //PID variables
+  float thr, ypr_setpoint[3];
+  float kp_,ki_,kd_;
+  float PIDout[3];
 
 };
 

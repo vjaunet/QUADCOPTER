@@ -1,15 +1,17 @@
 #ifndef dmp_
 #define dmp_
 
+#define YAW 0
+#define PITCH 1
+#define ROLL 2
+#define DIM 3
+
+
 class DMP {
 
  private:
 
   bool dmpReady;          // set true if DMP init was successful
-  int YAW;
-  int PITCH;
-  int ROLL;
-  int DIM;
   float lastval[3];
   float offset[3];
 

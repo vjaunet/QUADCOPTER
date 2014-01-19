@@ -7,6 +7,10 @@
 #include <stdio.h>
 
 #define SERVO_MIN 1000;
+#define YAW 0
+#define PITCH 1
+#define ROLL 2
+#define DIM 3
 
 class Servo {
 
@@ -17,7 +21,8 @@ private:
 public:
   Servo();
   void open_blaster();
-  void init(Servo servo);
+  void init();
+  void update(float, float []);
   void setServo();
 
   int servoval[4];

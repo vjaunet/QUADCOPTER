@@ -17,15 +17,13 @@
 #include "timer.h"
 
 #define PERIOD 2500000
+#define YAW 0
+#define PITCH 1
+#define ROLL 2
+#define DIM 3
 
 TimerClass Timer;
 pthread_mutex_t TimerMutex_;
-
-const int YAW=0;
-const int PITCH=1;
-const int ROLL=2;
-const int DIM=3;
-
 
 TimerClass::TimerClass()
 {
@@ -104,76 +102,29 @@ void TimerClass::sig_handler_(int signum)
 {
   pthread_mutex_lock(&TimerMutex_);
 
-  //1-Get Command from remote
-  float thr, ypr_setpoint[3];
-  float kp_,ki_,kd_;
-  switch (remote.get_cmd()){
+  //1-Get and Execute Command from remote
+  remote.exec_remoteCMD();
 
-  case 666:
-    //On exit
-    //stop servos
-    for (int i=0;i<4;i++) ESC.servoval[i] = 0;
-    ESC.setServo();
-
-    //close socket
-    remote.Close();
-
-    exit(0);
-  case 0:
-    //set rcinput values values
-    parser.parse(remote.data,thr,ypr_setpoint);
-    break;
-  case 10:
-    //set pid constants
-    parser.parse(remote.data,kp_,ki_,kd_);
-    yprSTAB[0].set_Kpid(kp_,ki_,kd_);
-    break;
-  case 11:
-    //set pid constants
-    parser.parse(remote.data,kp_,ki_,kd_);
-    yprRATE[0].set_Kpid(kp_,ki_,kd_);
-    break;
-  case 12:
-    //set pid constants
-    parser.parse(remote.data,kp_,ki_,kd_);
-    yprSTAB[1].set_Kpid(kp_,ki_,kd_);
-    yprSTAB[2].set_Kpid(kp_,ki_,kd_);
-    break;
-  case 13:
-    //set pid constants
-    parser.parse(remote.data,kp_,ki_,kd_);
-    yprRATE[1].set_Kpid(kp_,ki_,kd_);
-    yprRATE[2].set_Kpid(kp_,ki_,kd_);
-    break;
-  }
-
-  // get attitude of the drone
+  //2- get attitude of the drone
   imu.getAttitude();
 
-  //Timer dt
+  //3- Timer dt
   Timer.calcdt_();
 
-  float PIDout[3];
-  // PID on attitude
+  //4- Calculate PID on attitude
   for (int i=0;i<DIM;i++){
-    PIDout[i] = yprSTAB[i].update_pid(ypr_setpoint[i],imu.ypr[i],Timer.dt);
+    Timer.PIDout[i] =
+      yprSTAB[i].update_pid(Timer.ypr_setpoint[i],
+			    imu.ypr[i],
+			    Timer.dt);
   }
-
-  //PID on rotation rate
-  // for (int i=0;i<DIM;i++){
-  //   PIDout[i] = yprRATE[i].update_pid(ypr_setpoint[i],imu.gyro[i],Timer.dt);
-  // }
 
   //printf("%d \n",PIDout[2]);
 
-  //ESC update
-  ESC.servoval[0] =(int)(thr - PIDout[PITCH]);//  + pid_out[YAW]);
-  ESC.servoval[1] =(int)(thr + PIDout[PITCH]);//  + pid_out[YAW]);
-  ESC.servoval[2] =(int)(thr + PIDout[ROLL]);// - pid_out[YAW]);
-  ESC.servoval[3] =(int)(thr - PIDout[ROLL]);// - pid_out[YAW]);
-  ESC.setServo();
+  //5- ESC update
+  ESC.update(Timer.thr,Timer.PIDout);
 
-  //timer end
+  //6- timer end
   Timer.compensate_();
   pthread_mutex_unlock(&TimerMutex_);
 }
