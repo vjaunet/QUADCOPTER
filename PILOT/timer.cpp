@@ -112,7 +112,7 @@ void TimerClass::sig_handler_(int signum)
   case 666:
     //On exit
     //stop servos
-    for (int i=0;i<4;i++){ESC.servoval[i] = 0;}
+    for (int i=0;i<4;i++) ESC.servoval[i] = 0;
     ESC.setServo();
 
     //close socket
@@ -153,7 +153,7 @@ void TimerClass::sig_handler_(int signum)
   //Timer dt
   Timer.calcdt_();
 
-  int PIDout[3];
+  float PIDout[3];
   // PID on attitude
   for (int i=0;i<DIM;i++){
     PIDout[i] = yprSTAB[i].update_pid(ypr_setpoint[i],imu.ypr[i],Timer.dt);
