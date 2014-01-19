@@ -34,6 +34,14 @@ for the Android app
 
 Many thanks to these people.
 
+First fully working version 19-01-2014
+
+Next Steps:
+- PID fine Tunning
+- Flight Tests
+- Implementation of RaspiCam 
+(Controller + Raspivid seem not to overload the Rpi)
+
 
 Hardware
 --------
