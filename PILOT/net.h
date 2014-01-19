@@ -17,6 +17,7 @@
 #include "servo.h"
 #include "pid.h"
 #include "dmp.h"
+#include "parser.h"
 #include "timer.h"
 
 

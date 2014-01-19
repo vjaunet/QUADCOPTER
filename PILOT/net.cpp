@@ -157,7 +157,6 @@ int Socket::get_cmd(){
 void Socket::exec_remoteCMD()
 {
   //PID variables
-  float thr, ypr_setpoint[3];
   float kp_,ki_,kd_;
 
 
@@ -181,7 +180,7 @@ void Socket::exec_remoteCMD()
     exit(0);
   case 0:
     //set rcinput values values
-    parser.parse(remote.data,thr,ypr_setpoint);
+    parser.parse(remote.data,Timer.thr,Timer.ypr_setpoint);
     break;
 
     case 10:
@@ -217,7 +216,7 @@ void Socket::exec_remoteCMD()
       //Remote says "Start"
       if (!imu.initialized){
 	printf("DMP not Initalized\n Can't start...\n");
-	break;
+	//break;
       }
 
       //Initializing ESCs

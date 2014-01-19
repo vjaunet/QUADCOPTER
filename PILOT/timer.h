@@ -34,6 +34,8 @@ class TimerClass
   struct sigaction signalAction; //signal action handler struct
   bool started;
 
+  float thr, ypr_setpoint[3];
+
  private:
   static void sig_handler_(int signum);
   struct itimerspec timeToSet_;  //time to be set
@@ -48,7 +50,6 @@ class TimerClass
   void compensate_();
 
   //PID variables
-  float thr, ypr_setpoint[3];
   float kp_,ki_,kd_;
   float PIDout[3];
 
