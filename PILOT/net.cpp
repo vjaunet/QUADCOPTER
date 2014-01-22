@@ -169,7 +169,8 @@ void Socket::exec_remoteCMD()
       //returns 13 for PRrate PID constants
 
   case 666:
-    //On exit
+    //On exit :
+
     //stop servos
     for (int i=0;i<4;i++) ESC.servoval[i] = 0;
     ESC.setServo();
@@ -216,7 +217,7 @@ void Socket::exec_remoteCMD()
       //Remote says "Start"
       if (!imu.initialized){
 	printf("DMP not Initalized\n Can't start...\n");
-	//break;
+	break;
       }
 
       //Initializing ESCs

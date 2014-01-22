@@ -22,6 +22,16 @@ The repository has several folders, that I initially made to code and test
 the different functions of the controller. The entire controller is in the
 PILOT folder.
 
+Folders :
+- AND2RPI  : a first version of socket programming for communication with
+a remote control over network
+- MODELS   : some C programs that simulate the dyanmics of Quadcopter
+- MPU6050s : Richard Ghirst's MPU6050 tools with wrappers in order to simplify
+its use
+- PILOT  : the complete controller currently under development
+- SERVOS : a cpp class used to write the ESC comands into /dev/servoblaster
+
+
 This project is greatly inspired and using source code from :
 - https://github.com/richardghirst/PiBits
 for ServoBlaster that I use to control the ESCs and the MPU6050 Digital motion processing.
@@ -34,13 +44,19 @@ for the Android app
 
 Many thanks to these people.
 
-First fully working version 19-01-2014
+First fully working version 22-01-2014
 
 Next Steps:
 - PID fine Tunning
 - Flight Tests
-- Implementation of RaspiCam 
+- Implementation of RaspiCam
 (Controller + Raspivid seem not to overload the Rpi)
+
+
+Documentation
+-------------
+
+Explqnqtions of the QUADCOPTER pilot...
 
 
 Hardware

@@ -29,7 +29,7 @@ void Servo::init(Servo servo)
   int servoval[4];
   int i;
   for (i=0;i<4;i++){
-    servoval[i]=100;
+    servoval[i]=1000;
   };
 
   servo.set(servoval);

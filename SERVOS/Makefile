@@ -18,4 +18,4 @@ test: $(CMN_OBJS) $(DMP_OBJS)
 	$(CXX) -o $@ $^ -lm
 
 clean:
-	rm -f $(CMN_OBJS) $(DMP_OBJS) test *~ MPU6050s/*~
+	rm -f $(CMN_OBJS) $(DMP_OBJS) test *~

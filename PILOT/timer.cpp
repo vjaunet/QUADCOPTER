@@ -119,7 +119,7 @@ void TimerClass::sig_handler_(int signum)
 			    Timer.dt);
   }
 
-  //printf("%d \n",PIDout[2]);
+  //printf("%f \n",Timer.PIDout[ROLL]);
 
   //5- ESC update
   ESC.update(Timer.thr,Timer.PIDout);
