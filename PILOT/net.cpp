@@ -176,9 +176,11 @@ void Socket::exec_remoteCMD()
     ESC.setServo();
 
     //close socket
-    remote.Close();
+    //remote.Close();
 
-    exit(0);
+    //stop Timer
+    Timer.stop();
+    break;
   case 0:
     //set rcinput values values
     parser.parse(remote.data,Timer.thr,Timer.ypr_setpoint);
@@ -209,24 +211,28 @@ void Socket::exec_remoteCMD()
 
     case 2:
       //intialization of IMU
-      imu.set_com();
-      imu.initialize();
-      break;
+      if (!Timer.started){
+	imu.set_com();
+	//imu.initialize();
+	break;
+       }
 
     case 1:
       //Remote says "Start"
-      if (!imu.initialized){
-	printf("DMP not Initalized\n Can't start...\n");
-	break;
-      }
+     if (!imu.initialized){
+       //printf("DMP not Initalized\n Can't start...\n");
+       //break;
+     }
 
       //Initializing ESCs
-      ESC.open_blaster();
-      ESC.init();
+     if (!Timer.started){
+       ESC.open_blaster();
+       ESC.init();
+     }
 
       //things are getting started !
       Timer.start();
-      for (;;){
+      while (Timer.started){
 	sleep(1000);
       }
 
