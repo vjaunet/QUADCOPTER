@@ -103,7 +103,6 @@ void PID::set_Kpid(float Kp,float Ki, float Kd)
   m_Ki = Ki;
   m_Kd = Kd;
 
-  printf("%f\n",m_Kp);
 }
 
 void PID::set_windup_bounds(float Min,float Max)
