@@ -67,7 +67,11 @@ DMP::DMP()
 {
   dmpReady=true;
   initialized = false;
-  for (int i=0;i<DIM;i++) lastval[i]=10;
+  for (int i=0;i<DIM;i++){
+    lastval[i]=10;
+    offset[i]=0;
+  }
+
 }
 
 
@@ -150,9 +154,9 @@ void DMP::initialize(){
     }
   }
 
-  for (int i=0;i<DIM;i++) {
-    offset[i] = ypr[i];
-  }
+  //no need to offset the Pitch and Roll
+  //the accelerometer gives the gravity direction to the DMP.
+  offset[0] = ypr[0];
   printf("IMU init done; offset values are :\n");
   printf("yaw = %f, pitch = %f, roll = %f\n\n",
 	 offset[YAW]*180/M_PI, offset[PITCH]*180/M_PI,
