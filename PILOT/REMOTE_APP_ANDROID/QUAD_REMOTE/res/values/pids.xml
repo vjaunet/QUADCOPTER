@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="pid_array">
+        <item>PR Rate </item>
+        <item>PR Stab</item>
+        <item>Y Rate</item>
+        <item>Y Stab</item>
+    </string-array>
+</resources>
