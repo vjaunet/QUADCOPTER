@@ -33,6 +33,16 @@ Servo::Servo()
   m_servoId[3] = 3;
 }
 
+bool Servo::Is_open_blaster()
+{
+  if(fid_servo==NULL) {
+    //printf("servoblaster not open !!!");
+    return false;
+  }
+
+  return true;
+}
+
 void Servo::open_blaster()
 {
   fid_servo=fopen("/dev/servoblaster","w");
@@ -69,13 +79,12 @@ void Servo::update(float throttle, float PIDcorrections[DIM])
 
 void Servo::setServo()
 {
-  if(fid_servo==NULL) {
-    printf("servoblaster not open !!!");
-    exit(0);
-  }
-
-  for (int i=0;i<4;i++){
-    fprintf(fid_servo, "%d=%dus\n",m_servoId[i], servoval[i]);
-    fflush(fid_servo);
+  if (Is_open_blaster()){
+    for (int i=0;i<4;i++){
+      fprintf(fid_servo, "%d=%dus\n",m_servoId[i], servoval[i]);
+      fflush(fid_servo);
+    }
+  } else {
+    printf("Servoblaster not opened \n");
   }
 }

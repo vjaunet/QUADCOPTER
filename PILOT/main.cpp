@@ -40,7 +40,6 @@
 
 int main(int argc, char *argv[])
 {
-  printf("Hello world!\n");
   printf("QuadCopter Pilot v0.1\n");
   printf("----------------------\n");
   printf("\n");

@@ -1,6 +1,6 @@
 /*
 
-  Socekt class
+  Socket class
   author : vincent jaunet
   date : 10-01-2013
 
@@ -10,6 +10,26 @@
   the remote client to send request.
   The output should be parsed in order to retrieve
   the desired attitude from the remote (see parse.*)
+
+  Copyright (c) <2014> <Vincent Jaunet>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  THE SOFTWARE.
 
 */
 
@@ -68,7 +88,7 @@ void Socket::create()
       exit(EXIT_FAILURE);
     }
 
-  printf( "Succeed to create socket\n\n" );
+  printf( "Succeed to create socket\nWaiting for Instructions...\n" );
 }
 
 
@@ -170,17 +190,15 @@ void Socket::exec_remoteCMD()
 
   case 666:
     //On exit :
+    //stop Timer
+    Timer.stop();
 
     //stop servos
     for (int i=0;i<4;i++) ESC.servoval[i] = 0;
-    ESC.setServo();
+    if (ESC.Is_open_blaster()) ESC.setServo();
 
-    //close socket
-    //remote.Close();
-
-    //stop Timer
-    Timer.stop();
     break;
+
   case 0:
     //set rcinput values values
     parser.parse(remote.data,Timer.thr,Timer.ypr_setpoint);
@@ -191,17 +209,21 @@ void Socket::exec_remoteCMD()
       parser.parse(remote.data,kp_,ki_,kd_);
       yprSTAB[0].set_Kpid(kp_,ki_,kd_);
       break;
+
     case 11:
       //set pid constants
       parser.parse(remote.data,kp_,ki_,kd_);
       yprRATE[0].set_Kpid(kp_,ki_,kd_);
       break;
+
     case 12:
       //set pid constants
       parser.parse(remote.data,kp_,ki_,kd_);
       yprSTAB[1].set_Kpid(kp_,ki_,kd_);
       yprSTAB[2].set_Kpid(kp_,ki_,kd_);
+      //printf("%f %f \n",kp_,ki_);
       break;
+
     case 13:
       //set pid constants
       parser.parse(remote.data,kp_,ki_,kd_);
@@ -213,28 +235,32 @@ void Socket::exec_remoteCMD()
       //intialization of IMU
       if (!Timer.started){
 	imu.set_com();
-	//imu.initialize();
+	imu.initialize();
 	break;
        }
 
     case 1:
-      //Remote says "Start"
-     if (!imu.initialized){
-       //printf("DMP not Initalized\n Can't start...\n");
-       //break;
-     }
+     //Remote says "Start"
 
-      //Initializing ESCs
-     if (!Timer.started){
-       ESC.open_blaster();
-       ESC.init();
-     }
-
-      //things are getting started !
-      Timer.start();
-      while (Timer.started){
-	sleep(1000);
+      if (Timer.started){
+	//PID already running
+	break;
+      } else if (!imu.initialized){
+	//IMU not initialized
+       printf("DMP not Initalized\n Can't start...\n");
+       break;
       }
+
+     //Initializing ESCs
+     ESC.open_blaster();
+     ESC.init();
+
+     //Things are getting started !
+     //launch the Alarm signal
+     Timer.start();
+     while (Timer.started){
+       sleep(1000);
+     }
 
     }//end switch
 

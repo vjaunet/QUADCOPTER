@@ -85,7 +85,7 @@ void Parser::parse(unsigned char data[256],float &t,float ypr[]){
 }
 
 
-void Parser::parse(unsigned char data[],float &ki,float &kp,float &kd){
+void Parser::parse(unsigned char data[],float &kp,float &ki,float &kd){
   //returns thrust, yaw, pitch and roll walues form char data
 
   //Processing packet
@@ -99,13 +99,13 @@ void Parser::parse(unsigned char data[],float &ki,float &kp,float &kd){
       std::string sub;
       ss >> sub;
 
-      if (sub == "ki" ){
-	ss >> sub;
-	ki = ::atof(sub.c_str());
-      }
-      else if(sub == "kp"){
+      if (sub == "kp" ){
 	ss >> sub;
 	kp = ::atof(sub.c_str());
+      }
+      else if(sub == "ki"){
+	ss >> sub;
+	ki = ::atof(sub.c_str());
       }
       else if(sub == "kd"){
 	ss >> sub;
