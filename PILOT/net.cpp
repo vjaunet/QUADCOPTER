@@ -41,8 +41,6 @@ Socket remote;
 Socket::Socket()
 {
   data[0] = '\0';
-  m_lastdata[0] = '\0';
-  m_last_type = -1;
   m_port = 7000;
   m_address.sin_family = AF_INET;
   m_address.sin_addr.s_addr = INADDR_ANY;
@@ -129,12 +127,6 @@ int Socket::get_cmd(){
 				 (sockaddr*)&from,
 				 &fromLength);
 
-  if (received_bytes <= 0){
-    for (int i=0;i<256;i++){
-      data[i] = m_lastdata[i];
-      type = m_last_type;
-    }}
-
   std::string packet( reinterpret_cast< char const* > (data));
   std::istringstream ss(packet);
 
@@ -169,7 +161,6 @@ int Socket::get_cmd(){
     } else { break; }
   }while(ss);
 
-  m_last_type = type;
   return(type);
 
 }
@@ -201,32 +192,31 @@ void Socket::exec_remoteCMD()
 
   case 0:
     //set rcinput values values
-    parser.parse(remote.data,Timer.thr,Timer.ypr_setpoint);
+    parser.parse(data,Timer.thr,Timer.ypr_setpoint);
     break;
 
     case 10:
       //set pid constants
-      parser.parse(remote.data,kp_,ki_,kd_);
+      parser.parse(data,kp_,ki_,kd_);
       yprSTAB[0].set_Kpid(kp_,ki_,kd_);
       break;
 
     case 11:
       //set pid constants
-      parser.parse(remote.data,kp_,ki_,kd_);
+      parser.parse(data,kp_,ki_,kd_);
       yprRATE[0].set_Kpid(kp_,ki_,kd_);
       break;
 
     case 12:
       //set pid constants
-      parser.parse(remote.data,kp_,ki_,kd_);
+      parser.parse(data,kp_,ki_,kd_);
       yprSTAB[1].set_Kpid(kp_,ki_,kd_);
       yprSTAB[2].set_Kpid(kp_,ki_,kd_);
-      //printf("%f %f \n",kp_,ki_);
       break;
 
     case 13:
       //set pid constants
-      parser.parse(remote.data,kp_,ki_,kd_);
+      parser.parse(data,kp_,ki_,kd_);
       yprRATE[1].set_Kpid(kp_,ki_,kd_);
       yprRATE[2].set_Kpid(kp_,ki_,kd_);
       break;

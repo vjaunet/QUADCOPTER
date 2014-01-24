@@ -28,7 +28,6 @@ class Socket{
   unsigned short m_port;
   int m_socket;
   unsigned char m_lastdata[256];
-  int m_last_type;
   int get_cmd(float& ,float& ,float& ,float&);
   int get_cmd();
 

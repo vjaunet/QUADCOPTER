@@ -159,8 +159,8 @@ void DMP::initialize(){
   offset[0] = ypr[0];
   printf("IMU init done; offset values are :\n");
   printf("yaw = %f, pitch = %f, roll = %f\n\n",
-	 offset[YAW]*180/M_PI, offset[PITCH]*180/M_PI,
-	 offset[ROLL]*180/M_PI);
+	 ypr[YAW]*180/M_PI, ypr[PITCH]*180/M_PI,
+	 ypr[ROLL]*180/M_PI);
   initialized = true;
 }
 
