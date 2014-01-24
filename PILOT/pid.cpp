@@ -96,6 +96,16 @@ float PID::update_pid(float setpoint, float input, float dt)
   return m_output;
 }
 
+void PID::reset()
+{
+  m_lasterr = 0;
+  m_sum_err = 0;
+  m_ddt_err = 0;
+  m_lastInput= 0;
+}
+
+
+
 void PID::set_Kpid(float Kp,float Ki, float Kd)
 {
 

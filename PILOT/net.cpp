@@ -188,6 +188,10 @@ void Socket::exec_remoteCMD()
     for (int i=0;i<4;i++) ESC.servoval[i] = 0;
     if (ESC.Is_open_blaster()) ESC.setServo();
 
+    //reset PID
+    for (int i=0;i<DIM;i++) yprSTAB[i].reset();
+    for (int i=0;i<DIM;i++) yprRATE[i].reset();
+
     break;
 
   case 0:
@@ -223,11 +227,11 @@ void Socket::exec_remoteCMD()
 
     case 2:
       //intialization of IMU
-      if (!Timer.started){
+      if (!Timer.started && !imu.initialized){
 	imu.set_com();
 	imu.initialize();
-	break;
        }
+      break;
 
     case 1:
      //Remote says "Start"
