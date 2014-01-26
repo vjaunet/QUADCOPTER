@@ -192,6 +192,8 @@ void Socket::exec_remoteCMD()
     for (int i=0;i<DIM;i++) yprSTAB[i].reset();
     for (int i=0;i<DIM;i++) yprRATE[i].reset();
 
+    printf("PID stopped \n");
+
     break;
 
   case 0:
@@ -216,6 +218,7 @@ void Socket::exec_remoteCMD()
       parser.parse(data,kp_,ki_,kd_);
       yprSTAB[1].set_Kpid(kp_,ki_,kd_);
       yprSTAB[2].set_Kpid(kp_,ki_,kd_);
+      //printf("%f %f %f\n",kp_,ki_,kd_);
       break;
 
     case 13:

@@ -92,6 +92,7 @@ float PID::update_pid(float setpoint, float input, float dt)
 
   //printf("setpt %f input %f outpt %f\n", m_Kp, m_Ki, m_Kd);
   //printf("setpt %f input %f outpt %f\n", setpoint, input, output);
+  //printf("PID: %f %f %f \n",m_Kp*m_err, m_sum_err, m_ddt_err);
 
   return m_output;
 }
@@ -108,7 +109,6 @@ void PID::reset()
 
 void PID::set_Kpid(float Kp,float Ki, float Kd)
 {
-
   m_Kp = Kp;
   m_Ki = Ki;
   m_Kd = Kd;

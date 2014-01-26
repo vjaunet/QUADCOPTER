@@ -119,7 +119,8 @@ void TimerClass::sig_handler_(int signum)
 			    Timer.dt);
   }
 
-  //printf("%f %f\n",imu.ypr[ROLL],Timer.PIDout[ROLL]);
+  //for controlling output
+  //printf("%f %f %f\n",Timer.ypr_setpoint[ROLL],imu.ypr[ROLL],Timer.PIDout[ROLL]);
 
   //5- ESC update
   ESC.update(Timer.thr,Timer.PIDout);
