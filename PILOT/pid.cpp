@@ -53,7 +53,6 @@ PID::PID()
 
   //PID variables
   m_err = 0;
-  m_lasterr = 0;
   m_sum_err = 0;
   m_ddt_err = 0;
   m_lastInput= 0;
@@ -80,28 +79,27 @@ float PID::update_pid(float setpoint, float input, float dt)
   if (m_output > m_outmax) {
     //winds up boundaries
     m_sum_err -= m_output - m_outmax;
-    m_output = m_outmax;
+    m_output   = m_outmax;
   }else if (m_output < m_outmin) {
     //winds up boundaries
     m_sum_err += m_outmin - m_output;
-    m_output = m_outmin;
+    m_output   = m_outmin;
   }
 
-  m_lasterr = m_err;
   m_lastInput= input;
 
-  //printf("setpt %f input %f outpt %f\n", m_Kp, m_Ki, m_Kd);
-  //printf("setpt %f input %f outpt %f\n", setpoint, input, output);
+  //printf("kp %f ki %f kd %f\n", m_Kp, m_Ki, m_Kd);
+  //printf("setpt %7.2f input   %7.2f output   %f\n", setpoint, input, m_output);
+  //printf("err   %7.2f ddt_err %7.2f sum_err  %7.2f\n", m_err, m_ddt_err, m_sum_err);
 
   return m_output;
 }
 
 void PID::reset()
 {
-  m_lasterr = 0;
-  m_sum_err = 0;
-  m_ddt_err = 0;
-  m_lastInput= 0;
+  m_sum_err   = 0;
+  m_ddt_err   = 0;
+  m_lastInput = 0;
 }
 
 

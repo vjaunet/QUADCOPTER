@@ -15,7 +15,6 @@ private:
 
   //PID constants
   float m_err;
-  float m_lasterr;
   float m_sum_err;
   float m_ddt_err;
   float m_lastInput;

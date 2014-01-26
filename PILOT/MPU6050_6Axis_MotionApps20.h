@@ -375,8 +375,8 @@ uint8_t MPU6050::dmpInitialize() {
             DEBUG_PRINTLN(F("Setting DLPF bandwidth to 42Hz..."));
             setDLPFMode(MPU6050_DLPF_BW_42);
 
-            DEBUG_PRINTLN(F("Setting gyro sensitivity to +/- 2000 deg/sec..."));
-            setFullScaleGyroRange(MPU6050_GYRO_FS_2000);
+            DEBUG_PRINTLN(F("Setting gyro sensitivity to +/- 250 deg/sec..."));
+            setFullScaleGyroRange(MPU6050_GYRO_FS_250);
 
             DEBUG_PRINTLN(F("Setting DMP configuration bytes (function unknown)..."));
             setDMPConfig1(0x03);
@@ -686,7 +686,7 @@ uint8_t MPU6050::dmpReadAndProcessFIFOPacket(uint8_t numPackets, uint8_t *proces
 
         // process packet
         if ((status = dmpProcessFIFOPacket(buf)) > 0) return status;
-        
+
         // increment external process count variable, if supplied
         if (processed != 0) (*processed)++;
     }

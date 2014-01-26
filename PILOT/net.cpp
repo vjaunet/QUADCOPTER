@@ -181,12 +181,14 @@ void Socket::exec_remoteCMD()
 
   case 666:
     //On exit :
-    //stop Timer
-    Timer.stop();
 
     //stop servos
     for (int i=0;i<4;i++) ESC.servoval[i] = 0;
     if (ESC.Is_open_blaster()) ESC.setServo();
+
+    //stop Timer
+    Timer.stop();
+
 
     //reset PID
     for (int i=0;i<DIM;i++) yprSTAB[i].reset();
@@ -216,6 +218,7 @@ void Socket::exec_remoteCMD()
       parser.parse(data,kp_,ki_,kd_);
       yprSTAB[1].set_Kpid(kp_,ki_,kd_);
       yprSTAB[2].set_Kpid(kp_,ki_,kd_);
+      //printf("PID: %7.2f %7.2f %7.2f \n",kp_,ki_,kd_);
       break;
 
     case 13:
@@ -223,6 +226,7 @@ void Socket::exec_remoteCMD()
       parser.parse(data,kp_,ki_,kd_);
       yprRATE[1].set_Kpid(kp_,ki_,kd_);
       yprRATE[2].set_Kpid(kp_,ki_,kd_);
+      //printf("PID: %7.5f %7.5f %7.5f \n",kp_,ki_,kd_);
       break;
 
     case 2:
