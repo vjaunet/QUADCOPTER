@@ -43,24 +43,41 @@
 PID yprSTAB[3];
 PID yprRATE[3];
 
-
+//default constructo
 PID::PID()
 {
   //PID constants
   m_Kd = 0;
   m_Ki = 0;
-  m_Kp = 0.01;
+  m_Kp = 0;
 
   //PID variables
   m_err = 0;
   m_sum_err = 0;
   m_ddt_err = 0;
   m_lastInput= 0;
-  m_outmax = 100;
-  m_outmin = -100;
+  m_outmax =  200;
+  m_outmin = -200;
 }
 
-float PID::update_pid(float setpoint, float input, float dt)
+
+PID::PID(float kp_,float ki_,float kd_)
+{
+  //PID constants
+  m_Kd = kp_;
+  m_Ki = ki_;
+  m_Kp = kd_;
+
+  //PID variables
+  m_err = 0;
+  m_sum_err = 0;
+  m_ddt_err = 0;
+  m_lastInput= 0;
+  m_outmax =  200;
+  m_outmin = -200;
+}
+
+float PID::update_pid_std(float setpoint, float input, float dt)
 {
 
   //Computes error
@@ -78,11 +95,11 @@ float PID::update_pid(float setpoint, float input, float dt)
   m_output = m_Kp*m_err + m_sum_err + m_ddt_err;
   if (m_output > m_outmax) {
     //winds up boundaries
-    m_sum_err -= m_output - m_outmax;
+    m_sum_err  = 0.0;
     m_output   = m_outmax;
   }else if (m_output < m_outmin) {
     //winds up boundaries
-    m_sum_err += m_outmin - m_output;
+    m_sum_err  = 0.0;
     m_output   = m_outmin;
   }
 

@@ -64,7 +64,7 @@ void Parser::parse(unsigned char data[256],float &t,float ypr[]){
       if (sub == "\"thr\":" ){
 	ss >> sub;
 	std::istringstream( sub ) >> cmd;
-	t = (float) (cmd*5 + 1100);
+	t = (float) (cmd*10 + 1100);
       }
       else if(sub == "\"yaw\":"){
 	ss >> sub;

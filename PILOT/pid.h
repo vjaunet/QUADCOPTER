@@ -24,10 +24,11 @@ private:
 
 public:
   PID();
-  float update_pid(float setpt, float input, float dt);
-  void set_Kpid(float, float, float);
-  void set_windup_bounds(float, float);
-  void reset();
+  PID(float,float,float);
+  float update_pid_std(float setpt, float input, float dt);
+  void  set_Kpid(float, float, float);
+  void  set_windup_bounds(float, float);
+  void  reset();
   float setpoint;
 };
 

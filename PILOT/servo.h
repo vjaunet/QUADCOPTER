@@ -24,6 +24,7 @@ public:
   bool Is_open_blaster();
   void init();
   void update(float, float []);
+  void stopServo();
   void setServo();
 
   int servoval[4];

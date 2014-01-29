@@ -23,8 +23,8 @@
 #define DIM 3
 
 /*Defines which PID control to use*/
-//#define PID_STAB
-#define PID_RATE
+#define PID_STAB
+//#define PID_RATE
 
 TimerClass Timer;
 pthread_mutex_t TimerMutex_;
@@ -119,20 +119,36 @@ void TimerClass::sig_handler_(int signum)
   #ifdef PID_STAB
   for (int i=0;i<DIM;i++){
     Timer.PIDout[i] =
-      yprSTAB[i].update_pid(Timer.ypr_setpoint[i],
+      yprSTAB[i].update_pid_std(Timer.ypr_setpoint[i],
   			    imu.ypr[i],
   			    Timer.dt);
   }
-  //  printf("%f %f\n",imu.ypr[ROLL],Timer.PIDout[ROLL]);
+
+  // printf("%7.2f %7.2f %7.2f\n",Timer.ypr_setpoint[ROLL],
+  // 	 imu.ypr[ROLL],
+  // 	 Timer.PIDout[ROLL]);
+
+  for (int i=0;i<DIM;i++){
+    Timer.PIDout[i] =
+      yprRATE[i].update_pid_std(Timer.PIDout[i],
+  			    imu.gyro[i],
+				Timer.dt);
+  }
+
+  // printf("%7.2f %7.2f %7.2f\n",Timer.ypr_setpoint[ROLL],
+  // 	 imu.gyro[ROLL],
+  // 	 Timer.PIDout[ROLL]);
+  // printf("\n");
+
   #endif
 
   //4-2 Calculate PID on rotational rate
   #ifdef PID_RATE
   for (int i=2;i<DIM;i++){
     Timer.PIDout[i] =
-      yprRATE[i].update_pid(Timer.ypr_setpoint[i],
-			    imu.gyro[i],
-			    Timer.dt);
+      yprRATE[i].update_pid_std(Timer.ypr_setpoint[i],
+      			    imu.gyro[i],
+      			    Timer.dt);
   }
   //printf("%7.2f  %7.2f\n",imu.gyro[ROLL],Timer.PIDout[ROLL]);
   #endif

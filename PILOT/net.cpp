@@ -183,8 +183,7 @@ void Socket::exec_remoteCMD()
     //On exit :
 
     //stop servos
-    for (int i=0;i<4;i++) ESC.servoval[i] = 0;
-    if (ESC.Is_open_blaster()) ESC.setServo();
+    if (ESC.Is_open_blaster()) ESC.stopServo();
 
     //stop Timer
     Timer.stop();
@@ -235,6 +234,13 @@ void Socket::exec_remoteCMD()
 	imu.set_com();
 	imu.initialize();
        }
+
+      //initilization of PID constants
+      yprRATE[1].set_Kpid(0.5,0.003,0.09);
+      yprRATE[2].set_Kpid(0.5,0.003,0.09);
+      yprSTAB[1].set_Kpid(6.5,0.1,1.2);
+      yprSTAB[2].set_Kpid(6.5,0.1,1.2);
+
       break;
 
     case 1:
@@ -246,7 +252,7 @@ void Socket::exec_remoteCMD()
       } else if (!imu.initialized){
 	//IMU not initialized
        printf("DMP not Initalized\n Can't start...\n");
-       break;
+       //break;
       }
 
      //Initializing ESCs
