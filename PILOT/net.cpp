@@ -181,18 +181,19 @@ void Socket::exec_remoteCMD()
 
   case 666:
     //On exit :
+
+    //stop servos
+    if (ESC.Is_open_blaster()) ESC.stopServo();
+
     //stop Timer
     Timer.stop();
 
-    //stop servos
-    for (int i=0;i<4;i++) ESC.servoval[i] = 0;
-    if (ESC.Is_open_blaster()) ESC.setServo();
 
     //reset PID
     for (int i=0;i<DIM;i++) yprSTAB[i].reset();
     for (int i=0;i<DIM;i++) yprRATE[i].reset();
 
-    printf("PID stopped \n");
+    //printf("PID stopped \n");
 
     break;
 
@@ -218,7 +219,7 @@ void Socket::exec_remoteCMD()
       parser.parse(data,kp_,ki_,kd_);
       yprSTAB[1].set_Kpid(kp_,ki_,kd_);
       yprSTAB[2].set_Kpid(kp_,ki_,kd_);
-      //printf("%f %f %f\n",kp_,ki_,kd_);
+      //printf("PID: %7.2f %7.2f %7.2f \n",kp_,ki_,kd_);
       break;
 
     case 13:
@@ -226,6 +227,7 @@ void Socket::exec_remoteCMD()
       parser.parse(data,kp_,ki_,kd_);
       yprRATE[1].set_Kpid(kp_,ki_,kd_);
       yprRATE[2].set_Kpid(kp_,ki_,kd_);
+      //printf("PID: %7.5f %7.5f %7.5f \n",kp_,ki_,kd_);
       break;
 
     case 2:
@@ -234,6 +236,13 @@ void Socket::exec_remoteCMD()
 	imu.set_com();
 	imu.initialize();
        }
+
+      //initilization of PID constants
+      yprRATE[1].set_Kpid(0.5,0.003,0.09);
+      yprRATE[2].set_Kpid(0.5,0.003,0.09);
+      yprSTAB[1].set_Kpid(6.5,0.1,1.2);
+      yprSTAB[2].set_Kpid(6.5,0.1,1.2);
+
       break;
 
     case 1:
@@ -245,7 +254,7 @@ void Socket::exec_remoteCMD()
       } else if (!imu.initialized){
 	//IMU not initialized
        printf("DMP not Initalized\n Can't start...\n");
-       break;
+       //break;
       }
 
      //Initializing ESCs

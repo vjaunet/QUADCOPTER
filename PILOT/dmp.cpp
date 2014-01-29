@@ -190,14 +190,24 @@ void DMP::getAttitude()
     mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
 
     //removing offset values
+
     for (int i=0;i<DIM;i++){
       ypr[i]-=offset[i];
       ypr[i]*=180/M_PI;
     }
 
     mpu.dmpGetGyro(g, fifoBuffer);
-    for (int i=0;i<DIM;i++){
-      gyro[i]   = (float)(g[i])/131.0;
-   }
+
+    //0=gyroX, 1=gyroY, 2=gyroZ
+    //swapped to match Yaw,Pitch,Roll
+    //Scaled from deg/s to get tr/s
+     for (int i=0;i<DIM;i++){
+       gyro[i]   = (float)(g[DIM-i-1])/131.0/360.0;
+     }
+
+    // printf("gyro  %7.2f %7.2f %7.2f    \n", (float)g[0]/131.0,
+    // 	   (float)g[1]/131.0,
+    // 	   (float)g[2]/131.0);
+
   }
 }
