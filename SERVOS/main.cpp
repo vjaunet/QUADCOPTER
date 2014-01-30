@@ -52,10 +52,10 @@ int main(int argc, char *argv[])
   sleep(0.5);
   for(;;){
 
-   servoval[0]=1000;
-   servoval[1]=1000;
-   servoval[2]=1000;
-   servoval[3]=1000;
+   servoval[0]=1120;
+   servoval[1]=1120;
+   servoval[2]=1120;
+   servoval[3]=1120;
    ESC.set(servoval);
 
    sleep(0.5);

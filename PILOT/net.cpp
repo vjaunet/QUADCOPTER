@@ -33,6 +33,9 @@
 
 */
 
+#define YAW 0
+#define PITCH 1
+#define ROLL 2
 
 #include "net.h"
 
@@ -201,30 +204,30 @@ void Socket::exec_remoteCMD()
     break;
 
     case 10:
-      //set pid constants
+      //set pid constants YAW Stab
       parser.parse(data,kp_,ki_,kd_);
-      yprSTAB[0].set_Kpid(kp_,ki_,kd_);
+      yprSTAB[YAW].set_Kpid(kp_,ki_,kd_);
       break;
 
     case 11:
-      //set pid constants
+      //set pid constants YAW Rate
       parser.parse(data,kp_,ki_,kd_);
-      yprRATE[0].set_Kpid(kp_,ki_,kd_);
+      yprRATE[YAW].set_Kpid(kp_,ki_,kd_);
       break;
 
     case 12:
       //set pid constants
       parser.parse(data,kp_,ki_,kd_);
-      yprSTAB[1].set_Kpid(kp_,ki_,kd_);
-      yprSTAB[2].set_Kpid(kp_,ki_,kd_);
+      yprSTAB[PITCH].set_Kpid(kp_,ki_,kd_);
+      yprSTAB[ROLL].set_Kpid(kp_,ki_,kd_);
       //printf("PID: %7.2f %7.2f %7.2f \n",kp_,ki_,kd_);
       break;
 
     case 13:
       //set pid constants
       parser.parse(data,kp_,ki_,kd_);
-      yprRATE[1].set_Kpid(kp_,ki_,kd_);
-      yprRATE[2].set_Kpid(kp_,ki_,kd_);
+      yprRATE[PITCH].set_Kpid(kp_,ki_,kd_);
+      yprRATE[ROLL].set_Kpid(kp_,ki_,kd_);
       //printf("PID: %7.5f %7.5f %7.5f \n",kp_,ki_,kd_);
       break;
 
@@ -236,11 +239,10 @@ void Socket::exec_remoteCMD()
        }
 
       //initilization of PID constants
-      yprRATE[1].set_Kpid(0.5,0.003,0.09);
-      yprRATE[2].set_Kpid(0.5,0.003,0.09);
-      yprSTAB[1].set_Kpid(6.5,0.1,1.2);
-      yprSTAB[2].set_Kpid(6.5,0.1,1.2);
-
+      yprRATE[PITCH].set_Kpid(0.5,0.003,0.09);
+      yprRATE[ROLL].set_Kpid(0.5,0.003,0.09);
+      yprSTAB[PITCH].set_Kpid(6.5,0.1,1.2);
+      yprSTAB[ROLL].set_Kpid(6.5,0.1,1.2);
       break;
 
     case 1:
@@ -252,7 +254,7 @@ void Socket::exec_remoteCMD()
       } else if (!imu.initialized){
 	//IMU not initialized
        printf("DMP not Initalized\n Can't start...\n");
-       //break;
+       break;
       }
 
      //Initializing ESCs

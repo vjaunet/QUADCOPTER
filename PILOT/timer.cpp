@@ -124,9 +124,9 @@ void TimerClass::sig_handler_(int signum)
   			    Timer.dt);
   }
 
-  // printf("%7.2f %7.2f %7.2f\n",Timer.ypr_setpoint[ROLL],
-  // 	 imu.ypr[ROLL],
-  // 	 Timer.PIDout[ROLL]);
+  printf("%7.2f %7.2f %7.2f\n",Timer.ypr_setpoint[PITCH],
+  	 imu.ypr[PITCH],
+  	 Timer.PIDout[PITCH]);
 
   for (int i=0;i<DIM;i++){
     Timer.PIDout[i] =
@@ -135,22 +135,22 @@ void TimerClass::sig_handler_(int signum)
 				Timer.dt);
   }
 
-  // printf("%7.2f %7.2f %7.2f\n",Timer.ypr_setpoint[ROLL],
-  // 	 imu.gyro[ROLL],
-  // 	 Timer.PIDout[ROLL]);
-  // printf("\n");
+  printf("%7.2f %7.2f %7.2f\n",Timer.ypr_setpoint[ROLL],
+  	 imu.gyro[PITCH],
+  	 Timer.PIDout[PITCH]);
+  printf("\n");
 
   #endif
 
   //4-2 Calculate PID on rotational rate
   #ifdef PID_RATE
-  for (int i=2;i<DIM;i++){
+  for (int i=0;i<DIM;i++){
     Timer.PIDout[i] =
       yprRATE[i].update_pid_std(Timer.ypr_setpoint[i],
       			    imu.gyro[i],
       			    Timer.dt);
   }
-  //printf("%7.2f  %7.2f\n",imu.gyro[ROLL],Timer.PIDout[ROLL]);
+  printf("%7.2f  %7.2f\n",imu.gyro[PITCH],Timer.PIDout[PITCH]);
   #endif
 
   //5- ESC update

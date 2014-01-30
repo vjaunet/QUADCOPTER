@@ -70,8 +70,8 @@ void Servo::init()
 
 void Servo::update(float throttle, float PIDcorrections[DIM])
 {
-  servoval[0] =(int)(throttle - PIDcorrections[PITCH]);
-  servoval[1] =(int)(throttle + PIDcorrections[PITCH]);
+  servoval[0] =(int)(throttle + PIDcorrections[PITCH]);
+  servoval[1] =(int)(throttle - PIDcorrections[PITCH]);
   servoval[2] =(int)(throttle + PIDcorrections[ROLL]);
   servoval[3] =(int)(throttle - PIDcorrections[ROLL]);
   setServo();
