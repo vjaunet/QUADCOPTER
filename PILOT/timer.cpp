@@ -28,6 +28,7 @@
 
 TimerClass Timer;
 pthread_mutex_t TimerMutex_;
+int N_PID;
 
 TimerClass::TimerClass()
 {
@@ -116,35 +117,48 @@ void TimerClass::sig_handler_(int signum)
   Timer.calcdt_();
 
   //4-1 Calculate PID on attitude
+  if (abs(Timer.ypr_setpoint[YAW])<5) {
+    Timer.ypr_setpoint[YAW] =  imu.ypr[YAW];
+  }
+
   #ifdef PID_STAB
-  for (int i=0;i<DIM;i++){
+  for (int i=N_PID;i<DIM;i++){
     Timer.PIDout[i] =
       yprSTAB[i].update_pid_std(Timer.ypr_setpoint[i],
   			    imu.ypr[i],
   			    Timer.dt);
   }
 
-  printf("%7.2f %7.2f %7.2f\n",Timer.ypr_setpoint[PITCH],
-  	 imu.ypr[PITCH],
-  	 Timer.PIDout[PITCH]);
+  // printf("PITCH: %7.2f %7.2f %7.2f\n",Timer.ypr_setpoint[PITCH],
+  // 	 imu.ypr[PITCH],
+  // 	 Timer.PIDout[PITCH]);
 
-  for (int i=0;i<DIM;i++){
+  // printf("ROLL: %7.2f %7.2f %7.2f\n",Timer.ypr_setpoint[ROLL],
+  // 	 imu.ypr[ROLL],
+  // 	 Timer.PIDout[ROLL]);
+
+
+  for (int i=N_PID;i<DIM;i++){
     Timer.PIDout[i] =
       yprRATE[i].update_pid_std(Timer.PIDout[i],
   			    imu.gyro[i],
 				Timer.dt);
   }
 
-  printf("%7.2f %7.2f %7.2f\n",Timer.ypr_setpoint[ROLL],
-  	 imu.gyro[PITCH],
-  	 Timer.PIDout[PITCH]);
-  printf("\n");
+  // printf("PITCH: %7.2f %7.2f %7.2f\n",Timer.ypr_setpoint[PITCH],
+  // 	 imu.gyro[PITCH],
+  // 	 Timer.PIDout[PITCH]);
+
+  // printf("ROLL:  %7.2f %7.2f %7.2f\n",Timer.ypr_setpoint[ROLL],
+  // 	 imu.gyro[ROLL],
+  // 	 Timer.PIDout[ROLL]);
+
 
   #endif
 
   //4-2 Calculate PID on rotational rate
   #ifdef PID_RATE
-  for (int i=0;i<DIM;i++){
+  for (int i=N_PID;i<DIM;i++){
     Timer.PIDout[i] =
       yprRATE[i].update_pid_std(Timer.ypr_setpoint[i],
       			    imu.gyro[i],
@@ -152,6 +166,11 @@ void TimerClass::sig_handler_(int signum)
   }
   printf("%7.2f  %7.2f\n",imu.gyro[PITCH],Timer.PIDout[PITCH]);
   #endif
+
+  if (abs(Timer.ypr_setpoint[YAW])<5) {
+    //if yaw is used feed directly the ESCs
+    Timer.PIDout[YAW] = Timer.ypr_setpoint[YAW]*10;
+  }
 
   //5- ESC update
   ESC.update(Timer.thr,Timer.PIDout);

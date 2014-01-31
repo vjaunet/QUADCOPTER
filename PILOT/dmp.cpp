@@ -47,6 +47,8 @@
 #include "MPU6050_6Axis_MotionApps20.h"
 #include "I2Cdev.h"
 
+#define wrap_180(x) (x < -180 ? x+360 : (x > 180 ? x - 360: x))
+
 MPU6050 mpu;
 
 // MPU control/status vars
@@ -191,11 +193,16 @@ void DMP::getAttitude()
     mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
 
     //removing offset values
-
     for (int i=0;i<DIM;i++){
       ypr[i]-=offset[i];
       ypr[i]*=180/M_PI;
     }
+
+    //unwrap yaw when it reaches 180
+    ypr[0] = wrap_180[ypr[0]];
+
+    //change sign of Pitch, MPU is attached upside down
+    ypr[1]*=-1.0;
 
     mpu.dmpGetGyro(g, fifoBuffer);
 

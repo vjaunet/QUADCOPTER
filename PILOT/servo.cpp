@@ -68,12 +68,12 @@ void Servo::init()
   printf("                     ... DONE.\n");
 }
 
-void Servo::update(float throttle, float PIDcorrections[DIM])
+void Servo::update(float throttle, float PIDoutput[DIM])
 {
-  servoval[0] =(int)(throttle + PIDcorrections[PITCH]);
-  servoval[1] =(int)(throttle - PIDcorrections[PITCH]);
-  servoval[2] =(int)(throttle + PIDcorrections[ROLL]);
-  servoval[3] =(int)(throttle - PIDcorrections[ROLL]);
+  servoval[0] =(int)(throttle - PIDoutput[PITCH] - PIDoutput[YAW]);
+  servoval[1] =(int)(throttle + PIDoutput[PITCH] - PIDoutput[YAW]);
+  servoval[2] =(int)(throttle + PIDoutput[ROLL]  + PIDoutput[YAW]);
+  servoval[3] =(int)(throttle - PIDoutput[ROLL]  + PIDoutput[YAW]);
   setServo();
 }
 
