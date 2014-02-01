@@ -186,11 +186,12 @@ void Socket::exec_remoteCMD()
     //On exit :
 
     //stop servos
-    if (ESC.Is_open_blaster()) ESC.stopServo();
+    if (ESC.Is_open_blaster()){
+      ESC.stopServo();
+    }
 
     //stop Timer
     Timer.stop();
-
 
     //reset PID
     for (int i=0;i<DIM;i++) yprSTAB[i].reset();
@@ -243,6 +244,13 @@ void Socket::exec_remoteCMD()
       yprRATE[ROLL].set_Kpid(0.5,0.003,0.09);
       yprSTAB[PITCH].set_Kpid(6.5,0.1,1.2);
       yprSTAB[ROLL].set_Kpid(6.5,0.1,1.2);
+
+      //Initialization done
+      //Make sound beep
+      ESC.open_blaster();
+      ESC.init();
+      ESC.close_blaster();
+
       break;
 
     case 1:
@@ -258,8 +266,10 @@ void Socket::exec_remoteCMD()
       }
 
      //Initializing ESCs
-     ESC.open_blaster();
-     ESC.init();
+      printf("Initialization of ESC...\n");
+      ESC.open_blaster();
+      ESC.init();
+      printf("                     ... DONE.\n");
 
      //Things are getting started !
      //launch the Alarm signal

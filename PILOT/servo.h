@@ -21,6 +21,7 @@ private:
 public:
   Servo();
   void open_blaster();
+  void close_blaster();
   bool Is_open_blaster();
   void init();
   void update(float, float []);

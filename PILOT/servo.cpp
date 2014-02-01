@@ -52,9 +52,18 @@ void Servo::open_blaster()
   }
 }
 
+void Servo::close_blaster()
+{
+  if (fid_servo==NULL){
+     printf("/dev/servoblaster not opened \n");
+     return;
+  }
+  fclose(fid_servo);
+}
+
+
 void Servo::init()
 {
-  printf("Initialization of ESC...\n");
   if(fid_servo==NULL) return;
 
   //initialisation of ESC
@@ -64,8 +73,6 @@ void Servo::init()
 
   setServo();
   sleep(1);
-
-  printf("                     ... DONE.\n");
 }
 
 void Servo::update(float throttle, float PIDoutput[DIM])
