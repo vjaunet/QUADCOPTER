@@ -37,6 +37,19 @@
 #define PITCH 1
 #define ROLL 2
 
+#define STOP_PID  666
+#define START_PID 1
+#define INIT 2
+#define SHUTDOWN 777
+#define NOTHING  1515
+#define UPDATE_REMOTE 0
+#define UPDATE_PID_YAW_RATE 10
+#define UPDATE_PID_YAW_STAB 11
+#define UPDATE_PID_PR_RATE 12
+#define UPDATE_PID_PR_STAB 13
+
+
+
 #include "net.h"
 
 Socket remote;
@@ -129,6 +142,10 @@ int Socket::get_cmd(){
   received_bytes = recvfrom( m_socket, data, size, 0,
 				 (sockaddr*)&from,
 				 &fromLength);
+  if (received_bytes == -1){
+    //printf("received bytes = -1 \n");
+    return NOTHING;
+  }
 
   std::string packet( reinterpret_cast< char const* > (data));
   std::istringstream ss(packet);
@@ -138,32 +155,36 @@ int Socket::get_cmd(){
 
   do{
     if (sub == "START"){
-      type = 1;
+      type = START_PID;
+      break;
+    }else if (sub == "STOP"){
+      type = STOP_PID;
       break;
     }else if (sub == "EXIT"){
-      type = 666;
+      type = SHUTDOWN;
       break;
     }else if (sub == "INIT"){
-      type = 2;
+      type = INIT;
       break;
     } else if(sub == "pid"){
        ss >> sub;
        if (sub == "yaw_rate"){
-	 type = 10;
+	 type = UPDATE_PID_YAW_RATE;
 	 break;
        }else if (sub == "yaw_stab"){
-	 type = 11;
+	 type = UPDATE_PID_YAW_STAB;
 	 break;
        }else if (sub == "pr_stab"){
-	 type = 12;
+	 type = UPDATE_PID_PR_STAB;
 	 break;
        }else if (sub == "pr_rate"){
-	 type = 13;
+	 type = UPDATE_PID_PR_RATE;
 	 break;
        }
     } else { break; }
   }while(ss);
 
+  // printf("%d\n",type);
   return(type);
 
 }
@@ -173,7 +194,6 @@ void Socket::exec_remoteCMD()
   //PID variables
   float kp_,ki_,kd_;
 
-
   switch(get_cmd()){
       //returns 1 for Start(Initialize)
       //returns 2 for Initialize
@@ -182,103 +202,136 @@ void Socket::exec_remoteCMD()
       //returns 12 for PRstab PID constants
       //returns 13 for PRrate PID constants
 
-  case 666:
-    //On exit :
+  case NOTHING:
+    //nothing to do here
+    break;
+
+  case SHUTDOWN:
+    //On Shutdown :
+
+    //stop Timer
+    Timer.stop();
+    if (Timer.started){
+      printf("toto");
+    }
+
+    //close socket
+    Close();
 
     //stop servos
     if (ESC.Is_open_blaster()){
       ESC.stopServo();
+      ESC.close_blaster();
     }
+
+    //shutdown
+    system("sudo shutdown -h now");
+
+    //exit quad_pilot
+    exit(1);
+
+    break;
+
+  case UPDATE_REMOTE:
+    //set rcinput values values
+    parser.parse(data,Timer.thr,Timer.ypr_setpoint);
+    break;
+
+  case UPDATE_PID_YAW_STAB:
+    //set pid constants YAW Stab
+    parser.parse(data,kp_,ki_,kd_);
+    yprSTAB[YAW].set_Kpid(kp_,ki_,kd_);
+    break;
+
+  case UPDATE_PID_YAW_RATE:
+    //set pid constants YAW Rate
+    parser.parse(data,kp_,ki_,kd_);
+    yprRATE[YAW].set_Kpid(kp_,ki_,kd_);
+    break;
+
+  case UPDATE_PID_PR_STAB:
+    //set pid constants
+    parser.parse(data,kp_,ki_,kd_);
+    yprSTAB[PITCH].set_Kpid(kp_,ki_,kd_);
+    yprSTAB[ROLL].set_Kpid(kp_,ki_,kd_);
+    //printf("PID: %7.2f %7.2f %7.2f \n",kp_,ki_,kd_);
+    break;
+
+  case UPDATE_PID_PR_RATE:
+    //set pid constants
+    parser.parse(data,kp_,ki_,kd_);
+    yprRATE[PITCH].set_Kpid(kp_,ki_,kd_);
+    yprRATE[ROLL].set_Kpid(kp_,ki_,kd_);
+    //printf("PID: %7.5f %7.5f %7.5f \n",kp_,ki_,kd_);
+    break;
+
+  case INIT:
+    //intialization of IMU
+    if (!Timer.started && !imu.initialized){
+      imu.set_com();
+      imu.initialize();
+    }
+
+    //initilization of PID constants
+    yprRATE[PITCH].set_Kpid(0.5,0.003,0.09);
+    yprRATE[ROLL].set_Kpid(0.5,0.003,0.09);
+    yprSTAB[PITCH].set_Kpid(6.5,0.1,1.2);
+    yprSTAB[ROLL].set_Kpid(6.5,0.1,1.2);
+
+    //Initialization done
+    //Make sound beep
+    ESC.open_blaster();
+    ESC.init();
+    ESC.close_blaster();
+
+    break;
+
+  case STOP_PID:
+    //On exit :
 
     //stop Timer
     Timer.stop();
+
+    //stop servos
+    if (ESC.Is_open_blaster()){
+      ESC.stopServo();
+      ESC.close_blaster();
+    }
 
     //reset PID
     for (int i=0;i<DIM;i++) yprSTAB[i].reset();
     for (int i=0;i<DIM;i++) yprRATE[i].reset();
 
+    printf("PID Stopped \n");
     break;
 
-  case 0:
-    //set rcinput values values
-    parser.parse(data,Timer.thr,Timer.ypr_setpoint);
-    break;
 
-    case 10:
-      //set pid constants YAW Stab
-      parser.parse(data,kp_,ki_,kd_);
-      yprSTAB[YAW].set_Kpid(kp_,ki_,kd_);
+  case START_PID:
+    //Remote says "Start"
+
+    if (Timer.started){
+      //PID already running
       break;
-
-    case 11:
-      //set pid constants YAW Rate
-      parser.parse(data,kp_,ki_,kd_);
-      yprRATE[YAW].set_Kpid(kp_,ki_,kd_);
+    } else if (!imu.initialized){
+      //IMU not initialized
+      printf("DMP not Initalized\n Can't start...\n");
       break;
+    }
 
-    case 12:
-      //set pid constants
-      parser.parse(data,kp_,ki_,kd_);
-      yprSTAB[PITCH].set_Kpid(kp_,ki_,kd_);
-      yprSTAB[ROLL].set_Kpid(kp_,ki_,kd_);
-      //printf("PID: %7.2f %7.2f %7.2f \n",kp_,ki_,kd_);
-      break;
+    //Initializing ESCs
+    printf("Initialization of ESC...\n");
+    ESC.open_blaster();
+    ESC.init();
+    printf("                     ... DONE.\n");
 
-    case 13:
-      //set pid constants
-      parser.parse(data,kp_,ki_,kd_);
-      yprRATE[PITCH].set_Kpid(kp_,ki_,kd_);
-      yprRATE[ROLL].set_Kpid(kp_,ki_,kd_);
-      //printf("PID: %7.5f %7.5f %7.5f \n",kp_,ki_,kd_);
-      break;
+    //Things are getting started !
+    //launch the Alarm signal
+    Timer.start();
+    while (Timer.started){
+      sleep(1000);
+    }
 
-    case 2:
-      //intialization of IMU
-      if (!Timer.started && !imu.initialized){
-	imu.set_com();
-	imu.initialize();
-       }
-
-      //initilization of PID constants
-      yprRATE[PITCH].set_Kpid(0.5,0.003,0.09);
-      yprRATE[ROLL].set_Kpid(0.5,0.003,0.09);
-      yprSTAB[PITCH].set_Kpid(6.5,0.1,1.2);
-      yprSTAB[ROLL].set_Kpid(6.5,0.1,1.2);
-
-      //Initialization done
-      //Make sound beep
-      ESC.open_blaster();
-      ESC.init();
-      ESC.close_blaster();
-
-      break;
-
-    case 1:
-     //Remote says "Start"
-
-      if (Timer.started){
-	//PID already running
-	break;
-      } else if (!imu.initialized){
-	//IMU not initialized
-       printf("DMP not Initalized\n Can't start...\n");
-       break;
-      }
-
-     //Initializing ESCs
-      printf("Initialization of ESC...\n");
-      ESC.open_blaster();
-      ESC.init();
-      printf("                     ... DONE.\n");
-
-     //Things are getting started !
-     //launch the Alarm signal
-     Timer.start();
-     while (Timer.started){
-       sleep(1000);
-     }
-
-    }//end switch
+  }//end switch
 
   return;
 }

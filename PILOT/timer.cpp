@@ -28,7 +28,6 @@
 
 TimerClass Timer;
 pthread_mutex_t TimerMutex_;
-int N_PID;
 
 TimerClass::TimerClass()
 {
@@ -122,7 +121,7 @@ void TimerClass::sig_handler_(int signum)
   }
 
   #ifdef PID_STAB
-  for (int i=N_PID;i<DIM;i++){
+  for (int i=0;i<DIM;i++){
     Timer.PIDout[i] =
       yprSTAB[i].update_pid_std(Timer.ypr_setpoint[i],
   			    imu.ypr[i],
@@ -138,7 +137,7 @@ void TimerClass::sig_handler_(int signum)
   // 	 Timer.PIDout[ROLL]);
 
 
-  for (int i=N_PID;i<DIM;i++){
+  for (int i=0;i<DIM;i++){
     Timer.PIDout[i] =
       yprRATE[i].update_pid_std(Timer.PIDout[i],
   			    imu.gyro[i],
@@ -158,13 +157,13 @@ void TimerClass::sig_handler_(int signum)
 
   //4-2 Calculate PID on rotational rate
   #ifdef PID_RATE
-  for (int i=N_PID;i<DIM;i++){
+  for (int i=0;i<DIM;i++){
     Timer.PIDout[i] =
       yprRATE[i].update_pid_std(Timer.ypr_setpoint[i],
       			    imu.gyro[i],
       			    Timer.dt);
   }
-  printf("%7.2f  %7.2f\n",imu.gyro[PITCH],Timer.PIDout[PITCH]);
+  //printf("%7.2f  %7.2f\n",imu.gyro[PITCH],Timer.PIDout[PITCH]);
   #endif
 
   if (abs(Timer.ypr_setpoint[YAW])<5) {
@@ -172,10 +171,15 @@ void TimerClass::sig_handler_(int signum)
     Timer.PIDout[YAW] = Timer.ypr_setpoint[YAW]*10;
   }
 
-  //5- ESC update
-  ESC.update(Timer.thr,Timer.PIDout);
 
-  //6- timer end
-  Timer.compensate_();
+  //5- ESC update and compensate Timer
+  //   if timer has not been stopped
+  if (Timer.started){
+    ESC.update(Timer.thr,Timer.PIDout);
+    //printf("%7.2f  %7.2f\n",Timer.thr,Timer.PIDout[PITCH]);
+
+    Timer.compensate_();
+  }
+
   pthread_mutex_unlock(&TimerMutex_);
 }

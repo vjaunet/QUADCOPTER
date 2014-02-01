@@ -31,6 +31,8 @@ Servo::Servo()
   m_servoId[1] = 1;
   m_servoId[2] = 2;
   m_servoId[3] = 3;
+
+  fid_servo=NULL;
 }
 
 bool Servo::Is_open_blaster()
@@ -59,6 +61,7 @@ void Servo::close_blaster()
      return;
   }
   fclose(fid_servo);
+  fid_servo=NULL;
 }
 
 
