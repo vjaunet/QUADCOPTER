@@ -13,7 +13,6 @@ class DMP {
 
   bool dmpReady;          // set true if DMP init was successful
   float lastval[3];
-  float offset[3];
 
  public:
   DMP();
