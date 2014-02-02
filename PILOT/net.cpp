@@ -230,6 +230,8 @@ void Socket::exec_remoteCMD()
     //exit quad_pilot
     exit(1);
 
+    //printf("PID stopped \n");
+
     break;
 
   case UPDATE_REMOTE:

@@ -5,6 +5,7 @@
 #include <fstream>
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 #define SERVO_MIN 1000;
 #define YAW 0
