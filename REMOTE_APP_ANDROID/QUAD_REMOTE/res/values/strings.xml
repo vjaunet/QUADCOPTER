@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, QuadcontrolActivity!</string>
+    <string name="app_name">Quadcontrol</string>
+    <string name="doup">Update</string>
+    <string name="Start">Start</string>
+    <string name="Init">Init</string> 
+    <string name="Stop">Stop</string>
+    <string name="Shutdown">Shutdown</string>
+    <string name="Exit">Exit</string>
+    <string name="kp">Kp</string>
+    <string name="ki">Ki</string>
+    <string name="kd">Kd</string>
+    <string name="ip">IP</string>
+    <string name="pidsel">PID Select</string>
+
+</resources>
