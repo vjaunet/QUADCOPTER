@@ -205,7 +205,7 @@
             android:layout_marginRight="10dp"
             android:background="@drawable/button_selector_beige"
             android:text="@string/Init" />
-        
+
         <Button
             android:id="@+id/doupdate"
             style="@style/btnStyleBeige"
@@ -217,7 +217,7 @@
         <Button
             android:id="@+id/start"
             style="@style/btnStyleGreen"
-            android:layout_width="96dp"
+            android:layout_width="150dp"
             android:layout_height="96dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
@@ -225,13 +225,23 @@
             android:text="@string/Start" />
 
         <Button
-            android:id="@+id/exit"
+            android:id="@+id/stop"
             style="@style/btnStyleOrange"
-            android:layout_width="match_parent"
+            android:layout_width="150dp"
             android:layout_height="96dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/button_selector_orange"
-            android:text="@string/Exit" />
+            android:text="@string/Stop" />
+
+        <Button
+            android:id="@+id/Exit"
+            style="@style/btnStyleOrange"
+            android:layout_width="wrap_content"
+            android:layout_height="96dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_selector_orange"
+            android:text="@string/Shutdown" />
 
     </LinearLayout>
 

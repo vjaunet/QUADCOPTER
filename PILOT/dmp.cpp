@@ -47,6 +47,8 @@
 #include "MPU6050_6Axis_MotionApps20.h"
 #include "I2Cdev.h"
 
+#define wrap_180(x) (x < -180 ? x+360 : (x > 180 ? x - 360: x))
+
 MPU6050 mpu;
 
 // MPU control/status vars
@@ -69,7 +71,6 @@ DMP::DMP()
   initialized = false;
   for (int i=0;i<DIM;i++){
     lastval[i]=10;
-    offset[i]=0;
   }
 
 }
@@ -154,9 +155,6 @@ void DMP::initialize(){
     }
   }
 
-  //no need to offset the Pitch and Roll
-  //the accelerometer gives the gravity direction to the DMP.
-  offset[0] = ypr[0];
   printf("IMU init done; offset values are :\n");
   printf("yaw = %f, pitch = %f, roll = %f\n\n",
 	 ypr[YAW]*180/M_PI, ypr[PITCH]*180/M_PI,
@@ -189,12 +187,16 @@ void DMP::getAttitude()
     mpu.dmpGetGravity(&gravity, &q);
     mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
 
-    //removing offset values
-
+    //scaling for degrees output
     for (int i=0;i<DIM;i++){
-      ypr[i]-=offset[i];
       ypr[i]*=180/M_PI;
     }
+
+    //unwrap yaw when it reaches 180
+    ypr[0] = wrap_180(ypr[0]);
+
+    //change sign of Pitch, MPU is attached upside down
+    ypr[1]*=-1.0;
 
     mpu.dmpGetGyro(g, fifoBuffer);
 

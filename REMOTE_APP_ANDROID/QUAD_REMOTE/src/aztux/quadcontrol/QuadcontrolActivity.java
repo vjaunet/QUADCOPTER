@@ -29,17 +29,17 @@ import android.view.View.OnTouchListener;
 public class QuadcontrolActivity extends Activity {
     /** Called when the activity is first created. */
 	
-	public int throttle = 3;  // 0 to 100
-	public int yaw = 0;  // -50 to + 50
-	public int pitch = 0; // -50 to + 50
-	public int roll = 0;  // -50 to + 50
+	public static int throttle = 6;  // 0 to 100
+	public static int yaw = 0;  // -50 to + 50
+	public static int pitch = 0; // -50 to + 50
+	public static int roll = 0;  // -50 to + 50
 	
 	int height, width, thrCenterX, thrCenterY, pitCenterX, pitCenterY;
-	DatagramSocket s;
-	InetAddress local;
+	static DatagramSocket s;
+	static InetAddress local;
 	
-	Timer t = new Timer();
-	TimerTask udptask;
+	static Timer t = new Timer();
+	static TimerTask udptask;
 	boolean listening = true;
 	String serverMsgs = "";
 	
@@ -102,32 +102,10 @@ public class QuadcontrolActivity extends Activity {
 			
 		});
 		listenThread.start();
+	
 		
-	    udptask =  new TimerTask() {
-			
-			@Override
-			public void run() {
-
-				try {
-					local = InetAddress.getByName(PIDActivity.ip);
-					String msg = "{ \"type\": \"rcinput\", \"thr\": " + throttle + ", \"yaw\": " + yaw
-							+ ", \"pitch\": " + pitch + ", \"roll\": " + roll + "}\n";
-					int msg_length = msg.length();
-					byte[] message = msg.getBytes();
-					s.send(new DatagramPacket(message, msg_length, local, 7000));
-				} catch (UnknownHostException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-			}
-		};
-		
-		t.schedule(udptask, 50, 50);
+		//the task are now set in the PID Activity when Start or Stop is pressed
+		//t.schedule(udptask, 50, 20);
 		
 		
         v = new View(this) {
@@ -231,11 +209,47 @@ public class QuadcontrolActivity extends Activity {
 		setContentView(v);
     }
     
+ 
+    public static void pause_remote() {
+    	t.cancel();	
+    }
+    
+    public static void resume_remote() {
+        t = new Timer();
+        udptask =  new TimerTask() {
+			
+			@Override
+			public void run() {
+
+				try {
+					local = InetAddress.getByName(PIDActivity.ip);
+					String msg = "{ \"type\": \"rcinput\", \"thr\": " + throttle + ", \"yaw\": " + yaw
+							+ ", \"pitch\": " + pitch + ", \"roll\": " + roll + "}\n";
+					int msg_length = msg.length();
+					byte[] message = msg.getBytes();
+					s.send(new DatagramPacket(message, msg_length, local, 7000));
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		};
+		//schedul the new remote
+        t.schedule(udptask, 50, 20);
+    }
+    
+    
     public boolean onCreateOptionsMenu(Menu menu) 
     {
          super.onCreateOptionsMenu(menu);
          
          MenuItem Item = menu.add("PID");
+         MenuItem Itemcam = menu.add("Camera");
 		return true;
     }
     
@@ -243,6 +257,10 @@ public class QuadcontrolActivity extends Activity {
     {
     	if (item.getTitle() == "PID") {
     		Intent intent = new Intent(this, PIDActivity.class);
+    		startActivity(intent);
+    	}
+    	if (item.getTitle() == "Camera") {
+    		Intent intent = new Intent(this, CameraActivity.class);
     		startActivity(intent);
     	}
     	return true;

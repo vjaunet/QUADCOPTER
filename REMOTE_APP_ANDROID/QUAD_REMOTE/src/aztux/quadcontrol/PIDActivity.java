@@ -8,9 +8,12 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -205,8 +208,8 @@ public class PIDActivity extends Activity {
                 		float sb_min = Float.parseFloat(kp_min.getText().toString());
                 		float sb_max = Float.parseFloat(kp_max.getText().toString());
                 		val = (double)progresValue/100.f*(sb_max-sb_min) + sb_min;
-                		kp.setText(String.valueOf(val));                	
-                	}
+                		kp.setText(String.valueOf(val));  
+                		}
 
                 	@Override
                 	public void onStartTrackingTouch(SeekBar seekBar_kp) {
@@ -217,7 +220,7 @@ public class PIDActivity extends Activity {
 
                 	@Override
                 	public void onStopTrackingTouch(SeekBar seekBar_kp) {
-        				_kp = kp.getText().toString();
+                		_kp = kp.getText().toString();
         				ip = ipaddr.getText().toString();
         				saveBoxes(curpid);
         				
@@ -226,7 +229,7 @@ public class PIDActivity extends Activity {
         					@Override
         					public void run() {
         						generateMsg(curpid);
-        						        						
+        						
         						try {
         							Thread.sleep(10);
         						} catch (InterruptedException e) {
@@ -261,7 +264,7 @@ public class PIDActivity extends Activity {
 
                 	@Override
                 	public void onStopTrackingTouch(SeekBar seekBar_ki) {
-        				_ki = ki.getText().toString();
+                		_ki = ki.getText().toString();
         				ip = ipaddr.getText().toString();
         				saveBoxes(curpid);
         				
@@ -279,6 +282,7 @@ public class PIDActivity extends Activity {
         						}
         					}
         				}).start();
+                	
                 	}
                 });
 		
@@ -294,7 +298,7 @@ public class PIDActivity extends Activity {
                 		float sb_min = Float.parseFloat(kd_min.getText().toString());
                 		float sb_max = Float.parseFloat(kd_max.getText().toString());
                 		val = (double)progresValue/100.f*(sb_max-sb_min) + sb_min;
-                		kd.setText(String.valueOf(val));                	
+                		kd.setText(String.valueOf(val));   
                 	}
 
                 	@Override
@@ -306,7 +310,7 @@ public class PIDActivity extends Activity {
 
                 	@Override
                 	public void onStopTrackingTouch(SeekBar seekBar_kd) {
-        				_kd = kd.getText().toString();
+                		_kd = kd.getText().toString();
         				ip = ipaddr.getText().toString();
         				saveBoxes(curpid);
         				
@@ -377,11 +381,13 @@ public class PIDActivity extends Activity {
 					
 					@Override
 					public void run() {
-						
+														
 						generateMsg(curpid);					
 																		
 						String msg = "START\n";
 						sendMsg(msg);
+						
+						QuadcontrolActivity.resume_remote();
 						
 						try {
 							Thread.sleep(10);
@@ -427,7 +433,7 @@ public class PIDActivity extends Activity {
 			}
 		});
 
-		Button btn_exit = (Button) findViewById(R.id.exit);
+		Button btn_exit = (Button) findViewById(R.id.Exit);
 		btn_exit.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -439,8 +445,41 @@ public class PIDActivity extends Activity {
 					
 					@Override
 					public void run() {
+						QuadcontrolActivity.pause_remote();
+						
 						String msg = "EXIT\n";
-						sendMsg(msg);
+						sendMsg(msg);	
+												
+						try {
+							Thread.sleep(10);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						}	
+				}).start();
+				
+				//close down the activity after clicking
+				//finish();
+			}
+		});
+		
+		Button btn_stop = (Button) findViewById(R.id.stop);
+		btn_stop.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				ip = ipaddr.getText().toString();
+				saveBoxes(curpid);
+				
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						QuadcontrolActivity.pause_remote();
+						
+						String msg = "STOP\n";
+						sendMsg(msg);	
 						
 						try {
 							Thread.sleep(10);
@@ -457,4 +496,27 @@ public class PIDActivity extends Activity {
 		});
 	
 	}
+	
+	public boolean onCreateOptionsMenu(Menu menu) 
+    {
+         super.onCreateOptionsMenu(menu);
+         
+         MenuItem Item = menu.add("PID");
+         MenuItem Itemcam = menu.add("Camera");
+		return true;
+    }
+    
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+    	if (item.getTitle() == "PID") {
+    		Intent intent = new Intent(this, PIDActivity.class);
+    		startActivity(intent);
+    	}
+    	if (item.getTitle() == "Camera") {
+    		Intent intent = new Intent(this, CameraActivity.class);
+    		startActivity(intent);
+    	}
+    	return true;
+    }
+	
 }

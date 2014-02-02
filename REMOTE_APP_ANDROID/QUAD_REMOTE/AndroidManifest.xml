@@ -25,6 +25,10 @@
             	android:windowSoftInputMode="stateHidden">
 
         </activity>	
+        <activity android:name=".CameraActivity" android:label="@string/app_name"
+            	android:windowSoftInputMode="stateHidden">
+
+        </activity>	
     </application>
 
 </manifest>

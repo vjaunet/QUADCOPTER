@@ -7,6 +7,7 @@
     <string name="Start">Start</string>
     <string name="Init">Init</string> 
     <string name="Stop">Stop</string>
+    <string name="Shutdown">Shutdown</string>
     <string name="Exit">Exit</string>
     <string name="kp">Kp</string>
     <string name="ki">Ki</string>
