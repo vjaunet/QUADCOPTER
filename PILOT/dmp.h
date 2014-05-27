@@ -11,8 +11,9 @@ class DMP {
 
  private:
 
-  bool dmpReady;          // set true if DMP init was successful
+  bool dmpReady;         // set true if DMP init was successful
   float lastval[3];
+  float m_ypr_off[3];    //dmp offsets
 
  public:
   DMP();

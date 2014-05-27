@@ -112,6 +112,10 @@ void TimerClass::sig_handler_(int signum)
   //2- get attitude of the drone
   imu.getAttitude();
 
+  // printf("ATTITUDE: %7.2f %7.2f %7.2f\n",imu.ypr[YAW],
+  // 	 imu.ypr[PITCH],
+  // 	 imu.ypr[ROLL]);
+
   //3- Timer dt
   Timer.calcdt_();
 

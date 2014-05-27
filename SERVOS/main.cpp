@@ -6,6 +6,9 @@
 #include <math.h>
 #include <iostream>
 #include <fstream>
+#include <termios.h>
+#include <fcntl.h>
+#include "kbhit.h"
 
 #include "global.h"
 #include "servo.h"
@@ -36,7 +39,7 @@
 //
 //-------------------------------------
 
-
+using namespace std;
 
 int main(int argc, char *argv[])
 {
@@ -45,20 +48,95 @@ int main(int argc, char *argv[])
 
   int servoval[4];
   Servo ESC;
+  bool hit=true;
+  keyboard kb1,kb2,kb3,kb4;
 
   ESC.open_blaster();
-  ESC.init(ESC);
+  //ESC.init(ESC);
 
-  sleep(0.5);
-  for(;;){
+  // sleep(0.5);
+  // printf("\n");
+  // printf("Calibrating SimonK ESC...\n");
+  // printf("   Sending 2ms pulse, Hint keyboard when ESC beeped\n");
 
-   servoval[0]=1120;
-   servoval[1]=1120;
-   servoval[2]=1120;
-   servoval[3]=1120;
-   ESC.set(servoval);
+  // while(hit){
 
-   sleep(0.5);
+  //  servoval[0]=2000;
+  //  servoval[1]=2000;
+  //  servoval[2]=2000;
+  //  servoval[3]=2000;
+  //  ESC.set(servoval);
+
+  //  if (kb1.kbhit()!=0) {
+  //    hit=false;
+  //  }
+
+  //  sleep(0.5);
+  // }
+
+  // printf("\n");
+  // printf("   Sending 1ms pulse, Hint keyboard when ESC beeped\n");
+  // hit=true;
+
+  // while(hit){
+
+  //  servoval[0]=1000;
+  //  servoval[1]=1000;
+  //  servoval[2]=1000;
+  //  servoval[3]=1000;
+  //  ESC.set(servoval);
+
+  //  if (kb2.kbhit()!=0) {
+  //    hit=false;
+  //  }
+
+  //  sleep(0.5);
+  // }
+
+  // printf("\n");
+  // printf("   Ready for test: 1.2ms, Pess any key\n");
+  // hit=true;
+
+  // while (hit){
+  //   if (kb3.kbhit()!=0) {
+  //     hit=false;
+  //   }
+  // }
+
+  printf("   Arming ESC, Pess any key when beeped\n");
+
+  hit=true;
+  while(hit){
+
+    servoval[0]=1000;
+    servoval[1]=1000;
+    servoval[2]=1000;
+    servoval[3]=1000;
+    ESC.set(servoval);
+
+    if (kb1.kbhit()!=0) {
+      hit=false;
+    }
+
+    sleep(0.5);
+  }
+
+  printf("   Sending 1.2ms, Pess any key to stop\n");
+
+  hit=true;
+  while(hit){
+
+    servoval[0]=1200;
+    servoval[1]=1200;
+    servoval[2]=1200;
+    servoval[3]=1200;
+    ESC.set(servoval);
+
+    if (kb4.kbhit()!=0) {
+      hit=false;
+    }
+
+    sleep(0.5);
   }
 
   return 0;
