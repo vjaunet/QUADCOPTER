@@ -139,6 +139,15 @@ int main(int argc, char *argv[])
     sleep(0.5);
   }
 
+
+    servoval[0]=1000;
+    servoval[1]=1000;
+    servoval[2]=1000;
+    servoval[3]=1000;
+    ESC.set(servoval);
+
   return 0;
 }
+
+
 

@@ -280,12 +280,6 @@ void Socket::exec_remoteCMD()
     yprSTAB[PITCH].set_Kpid(6.5,0.1,1.2);
     yprSTAB[ROLL].set_Kpid(6.5,0.1,1.2);
 
-    //Initialization done
-    //Make sound beep
-    ESC.open_blaster();
-    ESC.init();
-    ESC.close_blaster();
-
     break;
 
   case STOP_PID:

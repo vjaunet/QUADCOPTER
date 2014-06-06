@@ -47,12 +47,6 @@ int main(int argc, char *argv[])
   //initializing Network communication
   remote.create();
 
-  //Make sound beep
-  ESC.open_blaster();
-  ESC.init();
-  ESC.close_blaster();
-
-
   /* Waiting fo Start command */
   while (true){
 
