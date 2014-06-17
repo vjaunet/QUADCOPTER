@@ -275,10 +275,11 @@ void Socket::exec_remoteCMD()
     }
 
     //initilization of PID constants
-    yprRATE[PITCH].set_Kpid(0.5,0.003,0.09);
-    yprRATE[ROLL].set_Kpid(0.5,0.003,0.09);
-    yprSTAB[PITCH].set_Kpid(6.5,0.1,1.2);
-    yprSTAB[ROLL].set_Kpid(6.5,0.1,1.2);
+    yprRATE[YAW].set_Kpid(2.5,0.1,0.1);
+    yprRATE[PITCH].set_Kpid(2.9,0.1,0.125);
+    yprRATE[ROLL].set_Kpid (2.9,0.1,0.125);
+    yprSTAB[PITCH].set_Kpid(3.3,0.035,0.04);
+    yprSTAB[ROLL].set_Kpid(3.3,0.035,0.04);
 
     break;
 
