@@ -240,7 +240,7 @@ public class QuadcontrolActivity extends Activity {
 			}
 		};
 		//schedul the new remote
-        t.schedule(udptask, 50, 20);
+        t.schedule(udptask, 50, 50);
     }
     
     
