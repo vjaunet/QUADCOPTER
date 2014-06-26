@@ -126,10 +126,12 @@ int main(int argc, char *argv[])
   hit=true;
   while(hit){
 
-    servoval[0]=1100;
-    servoval[1]=1100;
-    servoval[2]=1100;
-    servoval[3]=1100;
+    int cmd=1100;
+
+    servoval[0]=cmd;
+    servoval[1]=cmd;
+    servoval[2]=cmd;
+    servoval[3]=cmd;
     ESC.set(servoval);
 
     if (kb4.kbhit()!=0) {

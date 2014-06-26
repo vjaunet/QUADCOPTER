@@ -57,7 +57,7 @@ Socket remote;
 Socket::Socket()
 {
   data[0] = '\0';
-  m_port = 7000;
+  m_port = 7100;
   m_address.sin_family = AF_INET;
   m_address.sin_addr.s_addr = INADDR_ANY;
   m_address.sin_port = htons( (unsigned short) m_port );
@@ -90,7 +90,7 @@ void Socket::create()
   //Binding to desired port number
   if ( bind( m_socket, (const sockaddr*) &m_address, sizeof(sockaddr_in) ) < 0 )
     {
-      printf( "failed to bind socket\n" );
+      perror( "failed to bind socket");
       exit(EXIT_FAILURE);
     }
 
@@ -103,6 +103,7 @@ void Socket::create()
     }
 
   printf( "Succeed to create socket\nWaiting for Instructions...\n" );
+
 }
 
 
