@@ -227,7 +227,7 @@ public class QuadcontrolActivity extends Activity {
 							+ ", \"pitch\": " + pitch + ", \"roll\": " + roll + "}\n";
 					int msg_length = msg.length();
 					byte[] message = msg.getBytes();
-					s.send(new DatagramPacket(message, msg_length, local, 7000));
+					s.send(new DatagramPacket(message, msg_length, local, 7100));
 				} catch (UnknownHostException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

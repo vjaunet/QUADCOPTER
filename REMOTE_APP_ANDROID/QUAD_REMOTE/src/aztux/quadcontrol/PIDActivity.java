@@ -8,10 +8,13 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import android.app.Activity;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,13 +27,14 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 
 
 public class PIDActivity extends Activity {
 	int curpid = 0;
 	boolean pidlistloaded = false;
-	public static String _kp="0",_ki="0",_kd="0", ip = "10.0.0.5";
+	public static String _kp="0",_ki="0",_kd="0", ip = "192.168.1.1";
 	EditText kp;
 	EditText ki;
 	EditText kd;
@@ -46,33 +50,35 @@ public class PIDActivity extends Activity {
 	SeekBar seekBar_ki;
 	SeekBar seekBar_kd;
 	
+	private Button btn_init, btn_start, btn_stop, btn_doupdate, btn_exit;
+	
 	
 	void updateBoxes(int pid) {
-		kp.setText(prefs.getString("pid:"+pid+":kp", "1.0"));
-		ki.setText(prefs.getString("pid:"+pid+":ki", "1.0"));
-		kd.setText(prefs.getString("pid:"+pid+":kd", "1.0"));
+		kp.setText(prefs.getString("pid:"+pid+":kp", "2.5"));
+		ki.setText(prefs.getString("pid:"+pid+":ki", "0.1"));
+		kd.setText(prefs.getString("pid:"+pid+":kd", "0.1"));
 		
 		kp_min.setText(prefs.getString("pid:"+pid+":kp_min", "1.0"));
-		ki_min.setText(prefs.getString("pid:"+pid+":ki_min", "1.0"));
-		kd_min.setText(prefs.getString("pid:"+pid+":kd_min", "1.0"));
+		ki_min.setText(prefs.getString("pid:"+pid+":ki_min", "0.0"));
+		kd_min.setText(prefs.getString("pid:"+pid+":kd_min", "0.0"));
 		
-		kp_max.setText(prefs.getString("pid:"+pid+":kp_max", "2.0"));
-		ki_max.setText(prefs.getString("pid:"+pid+":ki_max", "2.0"));
-		kd_max.setText(prefs.getString("pid:"+pid+":kd_max", "2.0"));
+		kp_max.setText(prefs.getString("pid:"+pid+":kp_max", "4.0"));
+		ki_max.setText(prefs.getString("pid:"+pid+":ki_max", "0.2"));
+		kd_max.setText(prefs.getString("pid:"+pid+":kd_max", "0.2"));
 	}
 	
 	void updateSeekbars (int pid){
 		float sb_min = Float.parseFloat(prefs.getString("pid:"+pid+":kp_min", "1.0"));
-		float sb_max = Float.parseFloat(prefs.getString("pid:"+pid+":kp_max", "2.0"));
-		seekBar_kp.setProgress((int)((Float.parseFloat(prefs.getString("pid:"+pid+":kp", "1.0"))-sb_min)/(sb_max-sb_min)*100));
+		float sb_max = Float.parseFloat(prefs.getString("pid:"+pid+":kp_max", "4.0"));
+		seekBar_kp.setProgress((int)((Float.parseFloat(prefs.getString("pid:"+pid+":kp", "2.0"))-sb_min)/(sb_max-sb_min)*100));
 		
 		sb_min = Float.parseFloat(prefs.getString("pid:"+pid+":ki_min", "1.0"));
 		sb_max = Float.parseFloat(prefs.getString("pid:"+pid+":ki_max", "2.0"));
-		seekBar_ki.setProgress((int)((Float.parseFloat(prefs.getString("pid:"+pid+":ki", "1.0"))-sb_min)/(sb_max-sb_min)*100));
+		seekBar_ki.setProgress((int)((Float.parseFloat(prefs.getString("pid:"+pid+":ki", "0.1"))-sb_min)/(sb_max-sb_min)*100));
 		
 		sb_min = Float.parseFloat(prefs.getString("pid:"+pid+":kd_min", "1.0"));
 		sb_max = Float.parseFloat(prefs.getString("pid:"+pid+":kd_max", "2.0"));
-		seekBar_kd.setProgress((int)((Float.parseFloat(prefs.getString("pid:"+pid+":kd", "1.0"))-sb_min)/(sb_max-sb_min)*100));
+		seekBar_kd.setProgress((int)((Float.parseFloat(prefs.getString("pid:"+pid+":kd", "0.1"))-sb_min)/(sb_max-sb_min)*100));
 	}
 	
 	void saveBoxes(int pid) {
@@ -105,7 +111,7 @@ public class PIDActivity extends Activity {
 		
 		try {
 			byte[] message = str.getBytes();
-			s.send(new DatagramPacket(message, str.length(), local, 7000));
+			s.send(new DatagramPacket(message, str.length(), local, 7100));
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -115,6 +121,34 @@ public class PIDActivity extends Activity {
 			e.printStackTrace();
 		}
 	}
+	
+	void receiveMsg(String str) {
+		DatagramSocket s = null;
+		try {
+			s = new DatagramSocket(7100, InetAddress.getByName("0.0.0.0"));
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//Get bytes
+		byte[] message = new byte [1500];
+		DatagramPacket packet = new DatagramPacket(message, message.length);
+		try {
+			s.receive(packet);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//Convert to String
+		str = new String(message, 0, packet.getLength());
+	
+	}
+
 	
 	void generateMsg(int pid){
 		
@@ -137,6 +171,8 @@ public class PIDActivity extends Activity {
 				sendMsg(msg);
 				break;
 			case 3:
+				//this should never happens since PID YAW STAB is non sense
+				//Yaw Stab has been reæoved from pid array in values
 				msg = "pid yaw_stab kp " + prefs.getString("pid:3:kp", "1.0") + " ki " + prefs.getString("pid:3:ki", "1.0")
 					+ " kd " + prefs.getString("pid:3:kd", "1.0") + "\n";
 				sendMsg(msg);
@@ -168,6 +204,12 @@ public class PIDActivity extends Activity {
 		seekBar_kp = (SeekBar) findViewById(R.id.seekBar_kp);
 		seekBar_ki = (SeekBar) findViewById(R.id.seekBar_ki);
 		seekBar_kd = (SeekBar) findViewById(R.id.seekBar_kd);
+		
+		btn_doupdate = (Button)findViewById(R.id.doupdate);
+		btn_init = (Button)findViewById(R.id.init);
+		btn_start = (Button)findViewById(R.id.start);
+		btn_stop = (Button)findViewById(R.id.stop);
+		btn_exit = (Button)findViewById(R.id.Exit);
 				
 		updateBoxes(0);
 			
@@ -178,6 +220,7 @@ public class PIDActivity extends Activity {
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		// Apply the adapter to the spinner
 		pidSelect.setAdapter(adapter);
+		
 		
 		
 		pidSelect.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -332,8 +375,8 @@ public class PIDActivity extends Activity {
                 });
 		
 		
-		Button btn = (Button) findViewById(R.id.doupdate);
-		btn.setOnClickListener(new OnClickListener() {
+		//Button btn_doupdate
+		btn_doupdate.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View arg0) {
@@ -366,7 +409,7 @@ public class PIDActivity extends Activity {
 			}
 		});
 		
-		Button btn_start = (Button) findViewById(R.id.start);
+		//Button btn_starts
 		btn_start.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -403,7 +446,7 @@ public class PIDActivity extends Activity {
 			}
 		});
 		
-		Button btn_init = (Button) findViewById(R.id.init);
+		//Button btn_init
 		btn_init.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -411,13 +454,41 @@ public class PIDActivity extends Activity {
 				ip = ipaddr.getText().toString();
 				saveBoxes(curpid);
 				
+				btn_init.setEnabled(false);
+				btn_init.setBackgroundColor(Color.parseColor("#808080"));
+				
 				new Thread(new Runnable() {
 					
 					@Override
 					public void run() {
 								
+						//Send INIT order
 						String msg = "INIT\n";
 						sendMsg(msg);
+						
+						runOnUiThread(new Runnable() {
+						public void run(){
+							 Toast customToast = new Toast(getBaseContext());
+							 customToast = Toast.makeText(getBaseContext(), "INIT Sent...", Toast.LENGTH_SHORT);
+							 customToast.setGravity(Gravity.BOTTOM, 0, 15);
+							 customToast.show();
+							 }
+						});
+						
+						//wait for Acknowledgement from remote
+						//String ack = null;
+						//receiveMsg(ack);
+						
+						//runOnUiThread(new Runnable() {
+						//	public void run(){
+						//		 Toast customToast = new Toast(getBaseContext());
+						//		 customToast = Toast.makeText(getBaseContext(), "INIT Done...", Toast.LENGTH_SHORT);
+						//		 customToast.setGravity(Gravity.BOTTOM, 0, 15);
+						//		 customToast.show();
+						//		 }
+						//	});
+						
+						
 						
 						try {
 							Thread.sleep(10);
@@ -425,7 +496,9 @@ public class PIDActivity extends Activity {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-					}	
+						
+						}
+					
 				}).start();
 				
 				//close down the activity after clicking
@@ -433,7 +506,7 @@ public class PIDActivity extends Activity {
 			}
 		});
 
-		Button btn_exit = (Button) findViewById(R.id.Exit);
+		//Button btn_exit
 		btn_exit.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -464,7 +537,7 @@ public class PIDActivity extends Activity {
 			}
 		});
 		
-		Button btn_stop = (Button) findViewById(R.id.stop);
+		//Button btn_stop
 		btn_stop.setOnClickListener(new OnClickListener() {
 			
 			@Override
