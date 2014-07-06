@@ -71,26 +71,34 @@ public class CameraActivity extends Activity {
 		
 	}
 	
+	
+	//--------------------------------------------------------------
+	//Menus
 	public boolean onCreateOptionsMenu(Menu menu) 
     {
          super.onCreateOptionsMenu(menu);
          
          MenuItem Item = menu.add("PID");
          MenuItem Itemcam = menu.add("Camera");
+         MenuItem Itemtrim = menu.add("Trim");
 		return true;
     }
     
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-    	if (item.getTitle() == "PID") {
-    		Intent intent = new Intent(this, PIDActivity.class);
-    		startActivity(intent);
-    	}
-    	if (item.getTitle() == "Camera") {
-    		Intent intent = new Intent(this, CameraActivity.class);
-    		startActivity(intent);
-    	}
-    	return true;
-    }
+	  public boolean onOptionsItemSelected(MenuItem item)
+	    {
+	    	if (item.getTitle() == "PID") {
+	    		Intent intent = new Intent(this, PIDActivity.class);
+	    		startActivity(intent);
+	    	}
+	    	if (item.getTitle() == "Camera") {
+	    		Intent intent = new Intent(this, CameraActivity.class);
+	    		startActivity(intent);
+	    	}
+	    	if (item.getTitle() == "Trim") {
+	    		Intent intent = new Intent(this, TrimActivity.class);
+	    		startActivity(intent);
+	    	}
+	    	return true;
+	    }
 	
 }

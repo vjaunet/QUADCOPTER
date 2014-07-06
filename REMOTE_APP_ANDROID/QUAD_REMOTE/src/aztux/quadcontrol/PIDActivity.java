@@ -34,6 +34,7 @@ import android.widget.Toast;
 public class PIDActivity extends Activity {
 	int curpid = 0;
 	boolean pidlistloaded = false;
+	boolean initsent = false;
 	public static String _kp="0",_ki="0",_kd="0", ip = "192.168.1.1";
 	EditText kp;
 	EditText ki;
@@ -456,6 +457,7 @@ public class PIDActivity extends Activity {
 				
 				btn_init.setEnabled(false);
 				btn_init.setBackgroundColor(Color.parseColor("#808080"));
+				initsent = true;
 				
 				new Thread(new Runnable() {
 					
@@ -474,6 +476,7 @@ public class PIDActivity extends Activity {
 							 customToast.show();
 							 }
 						});
+						
 						
 						//wait for Acknowledgement from remote
 						//String ack = null;
@@ -570,26 +573,33 @@ public class PIDActivity extends Activity {
 	
 	}
 	
+	
+	//--------------------------------------------------------------
+	//Menus	
 	public boolean onCreateOptionsMenu(Menu menu) 
     {
          super.onCreateOptionsMenu(menu);
          
          MenuItem Item = menu.add("PID");
          MenuItem Itemcam = menu.add("Camera");
+         MenuItem Itemtrim = menu.add("Trim");
 		return true;
     }
-    
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-    	if (item.getTitle() == "PID") {
-    		Intent intent = new Intent(this, PIDActivity.class);
-    		startActivity(intent);
-    	}
-    	if (item.getTitle() == "Camera") {
-    		Intent intent = new Intent(this, CameraActivity.class);
-    		startActivity(intent);
-    	}
-    	return true;
-    }
 	
+	public boolean onOptionsItemSelected(MenuItem item)
+	    {
+	    	if (item.getTitle() == "PID") {
+	    		Intent intent = new Intent(this, PIDActivity.class);
+	    		startActivity(intent);
+	    	}
+	    	if (item.getTitle() == "Camera") {
+	    		Intent intent = new Intent(this, CameraActivity.class);
+	    		startActivity(intent);
+	    	}
+	    	if (item.getTitle() == "Trim") {
+	    		Intent intent = new Intent(this, TrimActivity.class);
+	    		startActivity(intent);
+	    	}
+	    	return true;
+	    }
 }
