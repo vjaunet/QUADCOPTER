@@ -34,7 +34,9 @@ import android.widget.Toast;
 public class PIDActivity extends Activity {
 	int curpid = 0;
 	boolean pidlistloaded = false;
-	boolean initsent = false;
+	public boolean initsent = false;
+	public boolean started = false;
+	
 	public static String _kp="0",_ki="0",_kd="0", ip = "192.168.1.1";
 	EditText kp;
 	EditText ki;
@@ -214,6 +216,20 @@ public class PIDActivity extends Activity {
 				
 		updateBoxes(0);
 			
+		
+		if (initsent==true) 
+		{
+			btn_init.setEnabled(false);
+			btn_init.setBackgroundColor(Color.parseColor("#808080"));
+		}
+		
+		if (started == true)
+		{
+			btn_start.setEnabled(false);
+			btn_start.setBackgroundColor(Color.parseColor("#808080"));	
+		}
+		
+		
 		final Spinner pidSelect = (Spinner) findViewById(R.id.pidSelect);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
 		        R.array.pid_array, android.R.layout.simple_spinner_item);
@@ -410,6 +426,7 @@ public class PIDActivity extends Activity {
 			}
 		});
 		
+		
 		//Button btn_starts
 		btn_start.setOnClickListener(new OnClickListener() {
 			
@@ -421,6 +438,10 @@ public class PIDActivity extends Activity {
 				ip = ipaddr.getText().toString();
 				saveBoxes(curpid);
 								
+				btn_start.setEnabled(false);
+				btn_start.setBackgroundColor(Color.parseColor("#808080"));
+				started = true;
+				
 				new Thread(new Runnable() {
 					
 					@Override
@@ -547,6 +568,10 @@ public class PIDActivity extends Activity {
 			public void onClick(View arg0) {
 				ip = ipaddr.getText().toString();
 				saveBoxes(curpid);
+				
+				btn_start.setEnabled(true);
+				btn_start.setBackgroundColor(Color.parseColor("#66CDAA"));
+				
 				
 				new Thread(new Runnable() {
 					

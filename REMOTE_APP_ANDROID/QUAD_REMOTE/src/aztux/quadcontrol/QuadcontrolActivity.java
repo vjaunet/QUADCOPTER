@@ -36,10 +36,10 @@ public class QuadcontrolActivity extends Activity {
 	public static int pitch = 0; // -50 to + 50
 	public static int roll = 0;  // -50 to + 50
 	
-	public static int trimpitch = 0;
-	public static int trimroll = 0;
+	public static int trimpitch;
+	public static int trimroll;
 	
-	public static int sensitivity = 2; 
+	public static int sensitivity; 
 	SharedPreferences Remote_prefs;
 	
 	int height, width, thrCenterX, thrCenterY, pitCenterX, pitCenterY;
@@ -66,7 +66,7 @@ public class QuadcontrolActivity extends Activity {
 	void load_default_values(){
 		trimpitch = Remote_prefs.getInt("trimpitch", 0);
 		trimroll  = Remote_prefs.getInt("trimroll", 0);
-		sensitivity = Remote_prefs.getInt("sensitivity", 0);
+		sensitivity = Remote_prefs.getInt("sensitivity", 2);
 		
 	}
 	

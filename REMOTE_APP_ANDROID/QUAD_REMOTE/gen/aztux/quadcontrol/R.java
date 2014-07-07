@@ -37,7 +37,8 @@ public final class R {
         public static final int RelativeLayout1=0x7f07001c;
         public static final int button1=0x7f070001;
         public static final int doupdate=0x7f070018;
-        public static final int downTrimBtn=0x7f07001f;
+        public static final int downSensi=0x7f070021;
+        public static final int downTrimBtn=0x7f070020;
         public static final int dummyImageView=0x7f07001d;
         public static final int init=0x7f070017;
         public static final int ipaddr=0x7f070016;
@@ -50,12 +51,13 @@ public final class R {
         public static final int kp=0x7f070008;
         public static final int kp_max=0x7f07000a;
         public static final int kp_min=0x7f070009;
-        public static final int leftTrimBtn=0x7f070021;
+        public static final int leftTrimBtn=0x7f07001f;
         public static final int pidSelect=0x7f070007;
-        public static final int rightTrimBtn=0x7f070020;
+        public static final int rightTrimBtn=0x7f07001e;
         public static final int seekBar_kd=0x7f070014;
         public static final int seekBar_ki=0x7f07000f;
         public static final int seekBar_kp=0x7f07000b;
+        public static final int sensi_text=0x7f070025;
         public static final int spinner1=0x7f070003;
         public static final int spinner2=0x7f070004;
         public static final int start=0x7f070019;
@@ -66,8 +68,9 @@ public final class R {
         public static final int textView4=0x7f070015;
         public static final int textView5=0x7f070006;
         public static final int toggleButton1=0x7f070005;
-        public static final int trim_text=0x7f070022;
-        public static final int upTrimBtn=0x7f07001e;
+        public static final int trim_text=0x7f070024;
+        public static final int upSensi=0x7f070023;
+        public static final int upTrimBtn=0x7f070022;
     }
     public static final class layout {
         public static final int camera=0x7f030000;

@@ -21,29 +21,41 @@ public class TrimActivity extends Activity {
 	//variables to be modified y clicking on arrows
 	int rolltrim = 0;
 	int pitchtrim = 0;
+	int sensitivity = 2;
 	
 	private Button upTrimBtn,downTrimBtn,leftTrimBtn,rightTrimBtn;
 	private TextView trimtext;
+	
+	private Button upSensibtn,downSensibtn;
+	private TextView sensitext;
 	
 	void set_remote_trim() {
 		
 		QuadcontrolActivity.trimpitch = pitchtrim;
 		QuadcontrolActivity.trimroll = rolltrim;
+		QuadcontrolActivity.sensitivity = sensitivity;
+		
 	}	
 	
 	void get_remote_trim() {
 		
 		pitchtrim = QuadcontrolActivity.trimpitch;
 		rolltrim  = QuadcontrolActivity.trimroll;
+		sensitivity = QuadcontrolActivity.sensitivity;
 	}	
 	
 	void print_value() {
 		
 		//print values on screen
 		String msg = "Roll Trim :" + rolltrim 
-				+", Pitch Trim : " + pitchtrim;
+				+", Pitch Trim : " + pitchtrim ;
 				
 		trimtext.setText(msg);
+		
+		msg = "Sensitivity : " + QuadcontrolActivity.sensitivity;
+		
+		sensitext.setText(msg);
+		
 	}
 			
 	
@@ -60,8 +72,45 @@ public class TrimActivity extends Activity {
 		
 		//link to textview
 		trimtext = (TextView)findViewById(R.id.trim_text);
+		
+		//link to sensitivity adjustements
+		upSensibtn = (Button)findViewById(R.id.upSensi);
+		downSensibtn = (Button)findViewById(R.id.downSensi);
+		
+		//Link to textView
+		sensitext =  (TextView)findViewById(R.id.sensi_text);
+		
+		//initialization
 		get_remote_trim();
 		print_value();
+		
+		
+		upSensibtn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				
+				sensitivity += 1;
+				set_remote_trim();
+				print_value();
+			}
+		});
+
+		downSensibtn.setOnClickListener(new OnClickListener() {
+	
+			@Override
+			public void onClick(View arg0) {
+		
+				sensitivity -= 1;
+				if (sensitivity < 1) 
+					{
+					sensitivity = 1;
+					}
+									
+				set_remote_trim();
+				print_value();
+			}
+		});
 		
 		upTrimBtn.setOnClickListener(new OnClickListener() {
 			
