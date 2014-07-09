@@ -117,7 +117,7 @@ public class TrimActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				
-				pitchtrim += 1;
+				pitchtrim -= 1;
 				set_remote_trim();
 				print_value();
 			}
@@ -128,7 +128,7 @@ public class TrimActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 			
-				pitchtrim -= 1;
+				pitchtrim += 1;
 				set_remote_trim();
 				print_value();
 				}
@@ -139,7 +139,7 @@ public class TrimActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 			
-				rolltrim += 1;
+				rolltrim -= 1;
 				set_remote_trim();
 				print_value();
 			}
@@ -150,7 +150,7 @@ public class TrimActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 			
-				rolltrim -= 1;
+				rolltrim += 1;
 				set_remote_trim();
 				print_value();
 			}

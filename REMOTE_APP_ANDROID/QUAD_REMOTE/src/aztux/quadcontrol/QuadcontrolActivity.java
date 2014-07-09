@@ -247,7 +247,7 @@ public class QuadcontrolActivity extends Activity {
 				try {
 					local = InetAddress.getByName(PIDActivity.ip);
 					String msg = "{ \"type\": \"rcinput\", \"thr\": " + throttle
-							+ ", \"yaw\": "   + yaw/sensitivity
+							+ ", \"yaw\": "   + yaw
 							+ ", \"pitch\": " + (pitch-trimpitch)/sensitivity 
 							+ ", \"roll\": "  + (roll -trimroll) /sensitivity 
 							+ "}\n";
