@@ -80,10 +80,10 @@ void Servo::init()
 
 void Servo::update(float throttle, float PIDoutput[DIM])
 {
-  servoval[0] =(int)(throttle - PIDoutput[ROLL] - PIDoutput[YAW]);
-  servoval[1] =(int)(throttle + PIDoutput[ROLL] - PIDoutput[YAW]);
-  servoval[2] =(int)(throttle - PIDoutput[PITCH]  + PIDoutput[YAW]);
-  servoval[3] =(int)(throttle + PIDoutput[PITCH]  + PIDoutput[YAW]);
+  servoval[0] =(int)(throttle + PIDoutput[PITCH] - PIDoutput[YAW]);
+  servoval[2] =(int)(throttle - PIDoutput[PITCH] - PIDoutput[YAW]);
+  servoval[1] =(int)(throttle - PIDoutput[ROLL]  + PIDoutput[YAW]);
+  servoval[3] =(int)(throttle + PIDoutput[ROLL]  + PIDoutput[YAW]);
   setServo();
 }
 

@@ -155,6 +155,8 @@ void DMP::initialize(){
     }
   }
 
+  for (int i=0;i<DIM;i++) m_ypr_off[i] = ypr[i];
+
   printf("IMU init done; offset values are :\n");
   printf("yaw = %f, pitch = %f, roll = %f\n\n",
 	 ypr[YAW]*180/M_PI, ypr[PITCH]*180/M_PI,
@@ -189,8 +191,14 @@ void DMP::getAttitude()
 
     //scaling for degrees output
     for (int i=0;i<DIM;i++){
+      //no offset removal
+      //should be accounted while triming
+      //ypr[i]-=m_ypr_off[i];
       ypr[i]*=180/M_PI;
     }
+
+    //printf(" %7.2f %7.2f %7.2f\n",ypr[0],ypr[1],ypr[2]);
+
 
     //unwrap yaw when it reaches 180
     ypr[0] = wrap_180(ypr[0]);

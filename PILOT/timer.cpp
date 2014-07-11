@@ -112,21 +112,29 @@ void TimerClass::sig_handler_(int signum)
   //2- get attitude of the drone
   imu.getAttitude();
 
+  // printf("ATTITUDE: %7.2f %7.2f %7.2f\n",imu.ypr[YAW],
+  // 	 imu.ypr[PITCH],
+  // 	 imu.ypr[ROLL]);
+
   //3- Timer dt
   Timer.calcdt_();
 
   //4-1 Calculate PID on attitude
-  if (abs(Timer.ypr_setpoint[YAW])<5) {
-    Timer.ypr_setpoint[YAW] =  imu.ypr[YAW];
-  }
+
+ // if (abs(Timer.ypr_setpoint[YAW])<5) {
+  //   Timer.ypr_setpoint[YAW] =  imu.ypr[YAW];
+  // }
 
   #ifdef PID_STAB
-  for (int i=0;i<DIM;i++){
+  //Stabilization is only done on Pitch and Roll
+  //Yaw is Rate PID only
+  for (int i=1;i<DIM;i++){
     Timer.PIDout[i] =
       yprSTAB[i].update_pid_std(Timer.ypr_setpoint[i],
   			    imu.ypr[i],
   			    Timer.dt);
   }
+  Timer.PIDout[0] = Timer.ypr_setpoint[0];
 
   // printf("PITCH: %7.2f %7.2f %7.2f\n",Timer.ypr_setpoint[PITCH],
   // 	 imu.ypr[PITCH],
@@ -143,6 +151,11 @@ void TimerClass::sig_handler_(int signum)
   			    imu.gyro[i],
 				Timer.dt);
   }
+
+  // printf("YAW: %7.2f %7.2f %7.2f\n",Timer.ypr_setpoint[YAW],
+  // 	 imu.gyro[YAW],
+  // 	 Timer.PIDout[YAW]);
+
 
   // printf("PITCH: %7.2f %7.2f %7.2f\n",Timer.ypr_setpoint[PITCH],
   // 	 imu.gyro[PITCH],
@@ -166,17 +179,11 @@ void TimerClass::sig_handler_(int signum)
   //printf("%7.2f  %7.2f\n",imu.gyro[PITCH],Timer.PIDout[PITCH]);
   #endif
 
-  if (abs(Timer.ypr_setpoint[YAW])<5) {
-    //if yaw is used feed directly the ESCs
-    Timer.PIDout[YAW] = Timer.ypr_setpoint[YAW]*10;
-  }
-
-
   //5- ESC update and compensate Timer
   //   if timer has not been stopped
   if (Timer.started){
     ESC.update(Timer.thr,Timer.PIDout);
-    //printf("%7.2f  %7.2f\n",Timer.thr,Timer.PIDout[PITCH]);
+    //printf("%7.2f  %7.2f\n",Timer.thr,Timer.PIDout[ROLL]);
 
     Timer.compensate_();
   }

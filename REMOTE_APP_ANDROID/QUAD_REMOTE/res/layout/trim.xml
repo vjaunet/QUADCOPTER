@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/dummyImageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignTop="@+id/rightTrimBtn"
+        android:layout_toRightOf="@+id/rightTrimBtn"
+        android:contentDescription="desc"
+        android:src="@drawable/trim_dummy_center" />
+
+    <Button
+        android:id="@+id/rightTrimBtn"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignBaseline="@+id/leftTrimBtn"
+        android:layout_alignBottom="@+id/leftTrimBtn"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="120dp"
+        android:background="@drawable/btn_trim_right" />
+
+    <Button
+        android:id="@+id/leftTrimBtn"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/downTrimBtn"
+        android:background="@drawable/btn_trim_left" />
+
+    <Button
+        android:id="@+id/downTrimBtn"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignBaseline="@+id/downSensi"
+        android:layout_alignBottom="@+id/downSensi"
+        android:layout_toLeftOf="@+id/rightTrimBtn"
+        android:background="@drawable/btn_trim_down" />
+
+    <Button
+        android:id="@+id/upTrimBtn"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_above="@+id/rightTrimBtn"
+        android:layout_toLeftOf="@+id/rightTrimBtn"
+        android:background="@drawable/btn_trim_up" />
+
+    <Button
+        android:id="@+id/upSensi"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignBaseline="@+id/upTrimBtn"
+        android:layout_alignBottom="@+id/upTrimBtn"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="166dp"
+        android:background="@drawable/btn_trim_up" />
+
+    <Button
+        android:id="@+id/downSensi"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignLeft="@+id/upSensi"
+        android:layout_below="@+id/leftTrimBtn"
+        android:background="@drawable/btn_trim_down" />
+
+    <TextView
+        android:id="@+id/trim_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/upTrimBtn"
+        android:layout_alignLeft="@+id/leftTrimBtn"
+        android:layout_marginBottom="21dp"
+        android:layout_marginLeft="26dp"
+        android:gravity="center"
+        android:text="Roll trim : 0, Pitch trim : 0"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/sensi_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/trim_text"
+        android:layout_alignBottom="@+id/trim_text"
+        android:layout_alignLeft="@+id/upSensi"
+        android:gravity="center"
+        android:text="Sensitivity : 2"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+</RelativeLayout>

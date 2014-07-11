@@ -59,27 +59,27 @@ void Parser::parse(unsigned char data[256],float &t,float ypr[]){
     {
       std::string sub;
       ss >> sub;
-      int cmd;
+      float cmd;
 
       if (sub == "\"thr\":" ){
 	ss >> sub;
 	std::istringstream( sub ) >> cmd;
-	t = (float) (cmd*10 + 1100);
+	t = (cmd*10 + 1080);
       }
       else if(sub == "\"yaw\":"){
 	ss >> sub;
 	std::istringstream( sub ) >> cmd;
-	ypr[0] = (float) cmd;
+	ypr[0] = cmd;
       }
       else if(sub == "\"pitch\":"){
 	ss >> sub;
 	std::istringstream( sub ) >> cmd;
-	ypr[1] = (float) cmd;
+	ypr[1] = cmd;
       }
       else if(sub == "\"roll\":"){
 	ss >> sub;
 	std::istringstream( sub ) >> cmd;
-	ypr[2] = (float) cmd;
+	ypr[2] = xcmd;
       }
     } while (ss);
 }

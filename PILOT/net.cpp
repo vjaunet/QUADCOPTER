@@ -57,7 +57,7 @@ Socket remote;
 Socket::Socket()
 {
   data[0] = '\0';
-  m_port = 7000;
+  m_port = 7100;
   m_address.sin_family = AF_INET;
   m_address.sin_addr.s_addr = INADDR_ANY;
   m_address.sin_port = htons( (unsigned short) m_port );
@@ -90,7 +90,7 @@ void Socket::create()
   //Binding to desired port number
   if ( bind( m_socket, (const sockaddr*) &m_address, sizeof(sockaddr_in) ) < 0 )
     {
-      printf( "failed to bind socket\n" );
+      perror( "failed to bind socket");
       exit(EXIT_FAILURE);
     }
 
@@ -103,6 +103,7 @@ void Socket::create()
     }
 
   printf( "Succeed to create socket\nWaiting for Instructions...\n" );
+
 }
 
 
@@ -275,16 +276,11 @@ void Socket::exec_remoteCMD()
     }
 
     //initilization of PID constants
-    yprRATE[PITCH].set_Kpid(0.5,0.003,0.09);
-    yprRATE[ROLL].set_Kpid(0.5,0.003,0.09);
-    yprSTAB[PITCH].set_Kpid(6.5,0.1,1.2);
-    yprSTAB[ROLL].set_Kpid(6.5,0.1,1.2);
-
-    //Initialization done
-    //Make sound beep
-    ESC.open_blaster();
-    ESC.init();
-    ESC.close_blaster();
+    yprRATE[YAW].set_Kpid(2.5,0.1,0.1);
+    yprRATE[PITCH].set_Kpid(2.9,0.1,0.125);
+    yprRATE[ROLL].set_Kpid (2.9,0.1,0.125);
+    yprSTAB[PITCH].set_Kpid(3.3,0.035,0.04);
+    yprSTAB[ROLL].set_Kpid(3.3,0.035,0.04);
 
     break;
 
