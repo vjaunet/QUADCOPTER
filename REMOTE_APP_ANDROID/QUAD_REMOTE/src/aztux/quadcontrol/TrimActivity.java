@@ -19,9 +19,9 @@ public class TrimActivity extends Activity {
 	
 	
 	//variables to be modified y clicking on arrows
-	int rolltrim = 0;
-	int pitchtrim = 0;
-	int sensitivity = 2;
+	float rolltrim = 0;
+	float pitchtrim = 0;
+	float sensitivity = 2;
 	
 	private Button upTrimBtn,downTrimBtn,leftTrimBtn,rightTrimBtn;
 	private TextView trimtext;
@@ -47,12 +47,11 @@ public class TrimActivity extends Activity {
 	void print_value() {
 		
 		//print values on screen
-		String msg = "Roll Trim :" + rolltrim 
-				+", Pitch Trim : " + pitchtrim ;
+		String msg = String.format("Roll Trim : %.1f Pitch Trim : %.1f", rolltrim, pitchtrim);
 				
 		trimtext.setText(msg);
 		
-		msg = "Sensitivity : " + QuadcontrolActivity.sensitivity;
+		msg = String.format("Sensitivity : %.1f" , sensitivity);
 		
 		sensitext.setText(msg);
 		
@@ -90,7 +89,7 @@ public class TrimActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				
-				sensitivity += 1;
+				sensitivity += 0.5f;
 				set_remote_trim();
 				print_value();
 			}
@@ -101,7 +100,7 @@ public class TrimActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 		
-				sensitivity -= 1;
+				sensitivity -= 0.5f;
 				if (sensitivity < 1) 
 					{
 					sensitivity = 1;
@@ -117,7 +116,7 @@ public class TrimActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				
-				pitchtrim -= 1;
+				pitchtrim -= 0.1f;
 				set_remote_trim();
 				print_value();
 			}
@@ -128,7 +127,7 @@ public class TrimActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 			
-				pitchtrim += 1;
+				pitchtrim += 0.1f;
 				set_remote_trim();
 				print_value();
 				}
@@ -139,7 +138,7 @@ public class TrimActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 			
-				rolltrim -= 1;
+				rolltrim -= 0.1f;
 				set_remote_trim();
 				print_value();
 			}
@@ -150,7 +149,7 @@ public class TrimActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 			
-				rolltrim += 1;
+				rolltrim += 0.1f;
 				set_remote_trim();
 				print_value();
 			}
