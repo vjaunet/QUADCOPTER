@@ -69,7 +69,7 @@ void Parser::parse(unsigned char data[256],float &t,float ypr[]){
       else if(sub == "\"yaw\":"){
 	ss >> sub;
 	std::istringstream( sub ) >> cmd;
-	ypr[0] = cmd;
+	ypr[0] = cmd*3;
       }
       else if(sub == "\"pitch\":"){
 	ss >> sub;
@@ -79,7 +79,7 @@ void Parser::parse(unsigned char data[256],float &t,float ypr[]){
       else if(sub == "\"roll\":"){
 	ss >> sub;
 	std::istringstream( sub ) >> cmd;
-	ypr[2] = xcmd;
+	ypr[2] = cmd;
       }
     } while (ss);
 }

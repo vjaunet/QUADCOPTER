@@ -189,13 +189,11 @@ void DMP::getAttitude()
     mpu.dmpGetGravity(&gravity, &q);
     mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
 
-    ypr[0]-=m_ypr_off[0];
 
     //scaling for degrees output
     for (int i=0;i<DIM;i++){
       //no offset removal
       //should be accounted while triming
-      //ypr[i]-=m_ypr_off[i];
       ypr[i]*=180/M_PI;
     }
 
