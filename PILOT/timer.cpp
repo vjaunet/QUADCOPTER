@@ -152,9 +152,9 @@ void TimerClass::sig_handler_(int signum)
 				Timer.dt);
   }
 
-printf("YAW: %7.2f %7.2f %7.2f\n",Timer.ypr_setpoint[YAW],
-	 imu.gyro[YAW],
-	 Timer.PIDout[YAW]);
+// printf("YAW: %7.2f %7.2f %7.2f\n",Timer.ypr_setpoint[YAW],
+// 	 imu.gyro[YAW],
+// 	 Timer.PIDout[YAW]);
 
 
   // printf("PITCH: %7.2f %7.2f %7.2f\n",Timer.ypr_setpoint[PITCH],

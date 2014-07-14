@@ -69,7 +69,7 @@ void Parser::parse(unsigned char data[256],float &t,float ypr[]){
       else if(sub == "\"yaw\":"){
 	ss >> sub;
 	std::istringstream( sub ) >> cmd;
-	ypr[0] = cmd*3;
+	ypr[0] = cmd*3.5;
       }
       else if(sub == "\"pitch\":"){
 	ss >> sub;

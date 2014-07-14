@@ -56,8 +56,8 @@ PID::PID()
   m_sum_err = 0;
   m_ddt_err = 0;
   m_lastInput= 0;
-  m_outmax =  300;
-  m_outmin = -300;
+  m_outmax =  350;
+  m_outmin = -350;
 }
 
 
