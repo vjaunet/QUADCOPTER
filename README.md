@@ -1,6 +1,14 @@
 QUADCOPTER
 ==========
 
+
+A new version of the Quadcopter is available at:
+https://github.com/vjaunet/QUADCOPTER_V2
+=================================================
+
+It is now using an arduino and a 6 chanels remote
+
+
 A quadcopter controller on a Raspberry PI
 ------------------------------------------
 
